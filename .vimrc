@@ -46,6 +46,9 @@ vnoremap <C-I> ^
 nnoremap <C-A> $
 vnoremap <C-A> $
 
+nnoremap <C-S-A> <C-A>
+nnoremap <C-S-X> <C-X>
+
 " more convenient remap
 map <C-q> %
 " not convinced about the insert one yet
@@ -73,8 +76,8 @@ vmap <S-Tab> <
 
 " search for <++> and enter INSERT mode, careful about changing this it's used
 " all over the place.
-nnoremap <leader><space> <Esc>h/<++><CR>:noh<CR>"_c4l
-inoremap <leader><space> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
+nnoremap <leader><leader> <Esc>h/<++><CR>:noh<CR>"_c4l
+inoremap <leader><leader> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
 
 " have Y behave analogously to D and C rather than to dd and cc (which is
 " already done by yy):
@@ -218,6 +221,5 @@ set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
 
 " allow file custom settings with 
 set modeline
-" vim: set foldmethod=marker: set foldlevel=0
-
 " }}} 
+" vim: set foldmethod=marker: set foldlevel=0
