@@ -13,7 +13,9 @@ colorscheme solarized
 
 call plug#begin()
 
-Plug 'djoshea/vim-autoread'
+Plug 'djoshea/vim-autoread' 
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp' " language server protocol
 
 call plug#end()
 
