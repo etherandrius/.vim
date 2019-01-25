@@ -222,6 +222,11 @@ set modeline
 " }}} 
 " Language servers {{{ 
 
+map gr :LspReferences<CR>
+map gd :LspDefinition<CR>
+map ge :LspNextError<CR>
+
+
 "Python
 if executable('pyls')
     " pip install python-language-server
