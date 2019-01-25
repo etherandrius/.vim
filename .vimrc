@@ -9,21 +9,13 @@ syntax on
 "let g:solarized_termcolors=256
 colorscheme solarized
 
-" Test {{{
+" Vim-Plug {{{
 
-" Defining a new operator P - paste over
-" make P act like c and d
-nnoremap <silent><expr> P ':<C-u>set opfunc=PasteOver<CR>"'.v:register.'g@'
-" A function to implement paste over operator for P
-function! PasteOver(type, ...) abort
-    if a:0
-        silent exe 'norm! gv"'.v:register.'P'
-    elseif a:type is# 'line'
-        silent exe "normal! '[V']\"".v:register.'P'
-    else
-        silent exe 'normal! `[v`]"'.v:register.'P'
-    endif
-endfunction
+call plug#begin()
+
+Plug 'djoshea/vim-autoread'
+
+call plug#end()
 
 " }}}
 " Source {{{
@@ -41,13 +33,14 @@ nnoremap k gk
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
+" currently cannot map <C-S-{}> and <C-{}> to different keys :(
+"nnoremap <C-S-A> <C-A>
+"nnoremap <C-S-X> <C-X>
+
 nnoremap <C-I> ^
 vnoremap <C-I> ^
-nnoremap <C-A> $
-vnoremap <C-A> $
-
-nnoremap <C-S-A> <C-A>
-nnoremap <C-S-X> <C-X>
+nnoremap <C-a> $
+vnoremap <C-a> $
 
 " more convenient remap
 map <C-q> %
@@ -64,8 +57,10 @@ vnoremap <C-c> <Esc><Esc>
 nnoremap <silent> <leader>d :lclose<bar>b#<bar>bd #<CR>
 " <leader>n next buffer
 nnoremap <silent> <leader>n :bn<CR>  
+nnoremap <silent> <leader>N :bp<CR>  
 " <leader>p previous buffer
 nnoremap <silent> <leader>p :bp<CR>
+nnoremap <silent> <leader>P :bn<CR>
 
 "making shift tab work as backwards tab.
 inoremap <S-Tab> <C-d>
@@ -126,6 +121,7 @@ nmap <F2> <leader>tl
 " adjusting format options to my liking
 " :help fo-table for letter meanings.
 set formatoptions=crqlt
+set formatoptions-=o
 
 " enable folding
 set foldenable
@@ -222,4 +218,27 @@ set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
 " allow file custom settings with 
 set modeline
 " }}} 
+" Test {{{
+
+"" Defining a new operator P - paste over
+"" make P act like c and d
+"nnoremap <silent><expr> P ':<C-u>set opfunc=PasteOver<CR>"'.v:register.'g@'
+"" A function to implement paste over operator for P
+"function! PasteOver(type, ...) abort
+"    if a:0
+"        silent exe 'norm! gv"'.v:register.'P'
+"    elseif a:type is# 'line'
+"        silent exe "normal! '[V']\"".v:register.'P'
+"    else
+"        silent exe 'normal! `[v`]"'.v:register.'P'
+"    endif
+"endfunction
+
+" ]s jumps to next misspeled word, z= fixes a mispeleed word
+
+nnoremap }s ]sz=1<CR>1
+nnoremap {s [sz=1<CR>1
+nnoremap zf z=1<CR>1
+
+" }}}
 " vim: set foldmethod=marker: set foldlevel=0
