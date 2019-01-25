@@ -222,6 +222,7 @@ set modeline
 " }}} 
 " Language servers {{{ 
 
+"Python
 if executable('pyls')
     " pip install python-language-server
     au User lsp_setup call lsp#register_server({
@@ -230,6 +231,7 @@ if executable('pyls')
         \ 'whitelist': ['python'],
         \ })
 endif
+
 
 
 " }}}
