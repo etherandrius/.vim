@@ -220,6 +220,19 @@ set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
 " allow file custom settings with 
 set modeline
 " }}} 
+" Language servers {{{ 
+
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
+
+
+" }}}
 " Test {{{
 
 "" Defining a new operator P - paste over
