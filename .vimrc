@@ -254,6 +254,10 @@ endif
 
 nnoremap :b :buffers 
 
+" for consistency with :bd
+nnoremap :tabd :tabclose
+nnoremap :td :tabclose
+
 nnoremap <C-w>n :bn
 nnoremap <C-w>p :bp
 
