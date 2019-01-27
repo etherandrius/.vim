@@ -252,6 +252,8 @@ endif
 
 " ]s jumps to next misspeled word, z= fixes a mispeleed word
 
+nnoremap :b :buffers 
+
 nnoremap <C-w>n :bn
 nnoremap <C-w>p :bp
 
