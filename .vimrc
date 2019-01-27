@@ -28,10 +28,6 @@ let mapleader="\\"
 nmap <Space> <leader>
 "imap <Space> <leader>
 
-" if your line is wrapped it j,k won't skip the wrapped bit.
-nnoremap j gj
-nnoremap k gk
-
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
@@ -99,9 +95,7 @@ vnoremap ; :
 
 " show trailing white space and tabs
 " have <leader>tl ("toggle list") toggle list on/off and report the change:
-nnoremap <leader>tl :set invlist list?<CR>
-nmap <F2> <leader>tl
-
+nmap <F2> :set invlist list?<CR>
 " }}}
 " Set {{{
 
@@ -171,8 +165,8 @@ set hlsearch
 set incsearch
 
 
-"leaves 5 lines between cursor and end of the screen
-set scrolloff=5
+"leaves n lines between cursor and end of the screen
+set scrolloff=2
 
 "saves marks and jumps for the most recent 100files
 set viminfo='100,f1
@@ -258,9 +252,27 @@ endif
 
 " ]s jumps to next misspeled word, z= fixes a mispeleed word
 
+nnoremap <C-w>n :bn
+nnoremap <C-w>p :bp
+
+nnoremap <leader>w <C-w>w
+nnoremap <leader>W <C-w>W
+nnoremap <leader>v <C-w>v
+nnoremap <leader>s <C-w>s
+nnoremap <leader>q :q<CR>
+
+" search and fix the next misspeled word
 nnoremap }s ]sz=1<CR>1
 nnoremap {s [sz=1<CR>1
 nnoremap zf z=1<CR>1
+
+" for quickfix windows : when jumping to a location close the window 
+autocmd Filetype qf nnoremap <CR> <CR>:ccl<CR>
+
+"" DISABLED : messes with quickfix windows
+" if your line is wrapped it j,k won't skip the wrapped bit.
+"nnoremap j gj
+"nnoremap k gk
 
 " }}}
 " vim: set foldmethod=marker: set foldlevel=0
