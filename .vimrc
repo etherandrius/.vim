@@ -9,6 +9,10 @@ syntax on
 "let g:solarized_termcolors=256
 colorscheme solarized
 
+let mapleader="\\"
+nmap <Space> <leader>
+"imap <Space> <leader>
+
 " Vim-Plug {{{
 
 call plug#begin()
@@ -24,9 +28,6 @@ call plug#end()
 source ~/.vim/spell/abbrev.vim
 " }}}
 " Remapings {{{
-let mapleader="\\"
-nmap <Space> <leader>
-"imap <Space> <leader>
 
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
@@ -69,8 +70,11 @@ vmap <S-Tab> <
 
 " search for <++> and enter INSERT mode, careful about changing this it's used
 " all over the place.
-nnoremap <leader><leader> <Esc>h/<++><CR>:noh<CR>"_c4l
-inoremap <leader><leader> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
+nmap <leader><leader> <Esc>h/<++><CR>:noh<CR>"_c4l
+nmap <leader><Space> <Esc>h/<++><CR>:noh<CR>"_c4l
+nmap <Space><Space> <Esc>h/<++><CR>:noh<CR>"_c4l
+imap <leader><Space> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
+imap <leader><leader> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
 
 " have Y behave analogously to D and C rather than to dd and cc (which is
 " already done by yy):
@@ -171,7 +175,7 @@ set scrolloff=2
 "saves marks and jumps for the most recent 100files
 set viminfo='100,f1
 
-set colorcolumn=80
+set colorcolumn=81
 
 " use "[RO]" for "[readonly]" to save space in the message line:
 set shortmess+=r
@@ -258,14 +262,11 @@ nnoremap :b :buffers
 nnoremap :tabd :tabclose
 nnoremap :td :tabclose
 
-nnoremap <C-w>n :bn
-nnoremap <C-w>p :bp
+nnoremap <C-w>n :bn<CR>
+nnoremap <C-w>p :bp<CR>
 
 nnoremap <leader>w <C-w>w
 nnoremap <leader>W <C-w>W
-nnoremap <leader>v <C-w>v
-nnoremap <leader>s <C-w>s
-nnoremap <leader>q :q<CR>
 
 " search and fix the next misspeled word
 nnoremap }s ]sz=1<CR>1
