@@ -16,3 +16,12 @@ inoremap <silent><leader>item \begin{itemize}<CR><TAB>\item{<++>}<CR>\item{<++>}
 
 nnoremap <silent><leader>begin o\begin{<++>}<CR><TAB><++><CR>\end{<++>}<ESC>2k0
 inoremap <silent><leader>begin \begin{<++>}<CR><TAB><++><CR>\end{<++>}<ESC>2k0
+
+nnoremap <silent><leader>pbegin o\begin{<ESC>pa}<CR><TAB><++><CR>\end{<ESC>pa}<ESC>2k0
+inoremap <silent><leader>pbegin \begin{<ESC>pa}<CR><TAB><++><CR>\end{<ESC>pa}<ESC>2k0
+
+nnoremap <silent><leader>tem o\item{<CR><++><CR>}<ESC>2k0
+inoremap <silent><leader>tem \item{<CR><++><CR>}<ESC>2k0
+
+
+
