@@ -17,8 +17,8 @@ inoremap <silent><leader>item \begin{itemize}<CR>\item{<CR><++><CR>}<CR>\item{<C
 nnoremap <silent><leader>begin o\begin{<++>}<CR><++><CR>\end{<++>}<ESC>2k0
 inoremap <silent><leader>begin \begin{<++>}<CR><++><CR>\end{<++>}<ESC>2k0
 
-nnoremap <silent><leader>pbegin o\begin{<ESC>pa}<CR><++><CR>\end{<ESC>pa}<ESC>2k0
-inoremap <silent><leader>pbegin \begin{<ESC>pa}<CR><++><CR>\end{<ESC>pa}<ESC>2k0
+nnoremap <silent><leader>pbegin o\begin{<ESC>"0pa}<CR><++><CR>\end{<ESC>"0pa}<ESC>2k0
+inoremap <silent><leader>pbegin \begin{<ESC>"0pa}<CR><++><CR>\end{<ESC>"0pa}<ESC>2k0
 
 nnoremap <silent><leader>tem o\item{<CR><++><CR>}<ESC>2k0
 inoremap <silent><leader>tem \item{<CR><++><CR>}<ESC>2k0
