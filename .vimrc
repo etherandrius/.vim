@@ -9,6 +9,7 @@ syntax on
 "let g:solarized_termcolors=256
 colorscheme solarized
 
+let g:tex_flavor = "latex"
 let mapleader="\\"
 nmap <Space> <leader>
 "imap <Space> <leader>
