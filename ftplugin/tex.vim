@@ -2,7 +2,7 @@ set shiftwidth=2
 set tabstop=2
 set spell
 set textwidth=80
-set colorcolumn=80
+set colorcolumn=81
 set breakindent
 
 let g:tex_indent_items = 1
