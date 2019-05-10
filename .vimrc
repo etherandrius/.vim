@@ -71,11 +71,11 @@ vmap <S-Tab> <
 
 " search for <++> and enter INSERT mode, careful about changing this it's used
 " all over the place.
-nmap <leader><leader> <Esc>h/<++><CR>:noh<CR>"_c4l
-nmap <leader><Space> <Esc>h/<++><CR>:noh<CR>"_c4l
+" nmap <leader><leader> <Esc>h/<++><CR>:noh<CR>"_c4l
+" nmap <leader><Space> <Esc>h/<++><CR>:noh<CR>"_c4l
 nmap <Space><Space> <Esc>h/<++><CR>:noh<CR>"_c4l
-imap <leader><Space> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
-imap <leader><leader> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
+" imap <leader><Space> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
+" imap <leader><leader> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
 
 " have Y behave analogously to D and C rather than to dd and cc (which is
 " already done by yy):
