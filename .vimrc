@@ -92,8 +92,8 @@ nnoremap K k:join<CR>
 vnoremap K k:join<CR>
 
 " move to beginning/end of line.
-nnoremap B ^
-nnoremap E $
+" nnoremap B ^
+" nnoremap E $
 
 nnoremap ; :
 vnoremap ; :

@@ -20,6 +20,9 @@ inoremap <silent><leader>begin \begin{<++>}<CR><++><CR>\end{<++>}<ESC>2k0
 nnoremap <silent><leader>pbegin o\begin{<ESC>"0pa}<CR><++><CR>\end{<ESC>"0pa}<ESC>2k0
 inoremap <silent><leader>pbegin \begin{<ESC>"0pa}<CR><++><CR>\end{<ESC>"0pa}<ESC>2k0
 
+nnoremap <silent><leader>aref a\autoref{<ESC>"0pa}
+inoremap <silent><leader>aref \autoref{<ESC>"0pa}
+
 nnoremap <silent><leader>tem o\item{<CR><++><CR>}<ESC>2k0
 inoremap <silent><leader>tem \item{<CR><++><CR>}<ESC>2k0
 
