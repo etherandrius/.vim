@@ -22,6 +22,8 @@ Plug 'djoshea/vim-autoread'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp' " language server protocol
 Plug 'calviken/vim-gdscript3' " godot language support
+Plug 'wincent/command-t' " fuzzy matching system ---- still only a test
+
 
 call plug#end()
 
