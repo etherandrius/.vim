@@ -21,6 +21,7 @@ call plug#begin()
 Plug 'djoshea/vim-autoread' 
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp' " language server protocol
+Plug 'calviken/vim-gdscript3' " godot language support
 
 call plug#end()
 
@@ -143,6 +144,7 @@ set expandtab
 
 " tab length is equal to 4 spaces.
 set tabstop=4
+set shiftwidth=4
 
 " history
 set history=50
