@@ -160,6 +160,9 @@ set whichwrap=h,l,~,[,]
 set showmode
 set showcmd 
 
+" lines don't wrap if the window is too small
+set nowrap
+
 " highlights the current line.
 set cursorline
 
