@@ -1,13 +1,22 @@
 filetype indent on
 filetype plugin on
 set nocompatible
-augroup filetype
-  autocmd BufNewFile,BufRead *.txt set filetype=human
-augroup END
 
+set background=light
+set t_Co=256
 syntax on
-"let g:solarized_termcolors=256
-colorscheme solarized
+if has("gui_running")
+	let g:solarized_termcolors=256
+    colorscheme solarized
+else
+	let g:solarized_termtrans = 1
+	let g:solarized_termcolors=16
+    colorscheme solarizedTerminal
+endif
+
+if &diff 
+	set wrap
+endif
 
 let g:tex_flavor = "latex"
 let mapleader="\\"
@@ -19,17 +28,30 @@ nmap <Space> <leader>
 call plug#begin()
 
 Plug 'djoshea/vim-autoread' 
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp' " language server protocol
-Plug 'calviken/vim-gdscript3' " godot language support
-Plug 'wincent/command-t' " fuzzy matching system ---- still only a test
-
+"Plug 'prabirshrestha/async.vim'
+"Plug 'prabirshrestha/vim-lsp' " language server protocol
+Plug 'wincent/command-t' " fuzzy matching system 
+Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 
 call plug#end()
 
 " }}}
 " Source {{{
 source ~/.vim/spell/abbrev.vim
+" }}}
+" Autocmd Rule {{{
+
+" *.txt fiels are filetype human
+augroup filetype
+  autocmd BufNewFile,BufRead *.txt set filetype=human
+augroup END
+
+" Remember cursor position
+augroup vimrc-remember-cursor-position
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+augroup END
+
 " }}}
 " Remapings {{{
 
@@ -40,10 +62,11 @@ nnoremap <C-y> 2<C-y>
 "nnoremap <C-S-A> <C-A>
 "nnoremap <C-S-X> <C-X>
 
-"nnoremap <C-I> ^
-"vnoremap <C-I> ^
-"nnoremap <C-a> $
-"vnoremap <C-a> $
+nnoremap <C-a> ^
+vnoremap <C-a> ^
+nnoremap <C-e> $
+vnoremap <C-e> $
+
 
 " more convenient remap
 map <C-q> %
@@ -122,13 +145,29 @@ nmap <F2> :set invlist list?<CR>
 " endif
 
 
+
+" ruby li
+set rubydll=/usr/local/opt/ruby/lib/libruby.2.6.dylib
+
 " adjusting format options to my liking
 " :help fo-table for letter meanings.
 set formatoptions=crqlt
 set formatoptions-=o
 
+" gui foint
+set guifont=Monaco:h15
+
 " enable folding
 set foldenable
+
+augroup remember_folds
+    autocmd!
+    autocmd BufWinLeave * mkview
+    autocmd BufWinEnter * silent! loadview
+augroup END
+
+" expand tab
+set expandtab
 
 " enable numbers and relative numbers
 set relativenumber
@@ -183,7 +222,7 @@ set scrolloff=2
 "saves marks and jumps for the most recent 100files
 set viminfo='100,f1
 
-set colorcolumn=81
+set colorcolumn=121
 
 " use "[RO]" for "[readonly]" to save space in the message line:
 set shortmess+=r
@@ -208,6 +247,9 @@ set undodir=~/.vim/undo//
 " mode instance.
 set backspace=indent,eol,start
 
+" remove bell sounds from vim
+set visualbell t_vb=
+
 " add pointy brackets <:> to be matched with %
 set matchpairs+=<:>
 
@@ -228,9 +270,9 @@ set modeline
 " }}} 
 " Language servers {{{ 
 
-map gr :LspReferences<CR>
-map gd :LspDefinition<CR>
-map ge :LspNextError<CR>
+"map gr :LspReferences<CR>
+"map gd :LspDefinition<CR>
+"map ge :LspNextError<CR>
 
 
 "Python
@@ -247,6 +289,14 @@ endif
 
 " }}}
 " Test {{{
+
+" (aagg) Mon Oct  7 22:36:49 PDT 2019
+" Change cursor shape between insert and normal mode in iTerm2.app
+if $TERM_PROGRAM =~ "iTerm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
+endif
+
 
 "" Defining a new operator P - paste over
 "" make P act like c and d
@@ -275,6 +325,14 @@ nnoremap <C-w>p :bp<CR>
 
 nnoremap <leader>w <C-w>w
 nnoremap <leader>W <C-w>W
+nnoremap <leader>l <C-w>l
+nnoremap <leader>L <C-w>L
+nnoremap <leader>k <C-w>k
+nnoremap <leader>K <C-w>K
+nnoremap <leader>j <C-w>j
+nnoremap <leader>J <C-w>J
+nnoremap <leader>h <C-w>h
+nnoremap <leader>H <C-w>H
 
 " search and fix the next misspeled word
 nnoremap }s ]sz=1<CR>1
