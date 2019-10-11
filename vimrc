@@ -160,6 +160,9 @@ set guifont=Monaco:h15
 " enable folding
 set foldenable
 
+
+" TODO figure out: I think this saves all the modifications to a file (or all
+" the buffers open) and saves them in ~/.vim/view/ which are then kept
 augroup remember_folds
     autocmd!
     autocmd BufWinLeave * mkview
@@ -207,6 +210,8 @@ set cursorline
 
 " shows what <TAB> can autocomplete.
 set wildmenu
+
+set completeopt=menu,preview,noselect,menuone
 
 " for performance.
 set lazyredraw
