@@ -129,10 +129,10 @@ nnoremap <C-y> 2<C-y>
 "nnoremap <C-S-A> <C-A>
 "nnoremap <C-S-X> <C-X>
 
-nnoremap <C-a> ^
-vnoremap <C-a> ^
-nnoremap <C-e> $
-vnoremap <C-e> $
+"nnoremap <C-a> ^
+"vnoremap <C-a> ^
+"nnoremap <C-e> $
+"vnoremap <C-e> $
 
 
 " more convenient remap
