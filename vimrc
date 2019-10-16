@@ -30,11 +30,12 @@ Plug 'djoshea/vim-autoread'
 "Plug 'prabirshrestha/vim-lsp' " language server protocol
 Plug 'wincent/command-t' " fuzzy matching system 
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
-" Use release branch
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
+Plug 'vim-scripts/MultipleSearch' " test
+
+
 
 call plug#end()
-
 " coc configuratio {{{
 lef g:go_def_mode='gopls'
 lef g:go_info_mode='gopls'
@@ -68,6 +69,8 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> ge <Plug>(coc-diagnostic-next-error)
+nmap <silent> gE <Plug>(coc-diagnostic-prev-error)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
@@ -92,7 +95,6 @@ nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " }}} 
-
 " vim-go configuration {{{
 
 " disable vim-go :GoDef short cut (gd)
@@ -100,8 +102,6 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 let g:go_def_mapping_enabled = 0
 
 " }}}
-
-
 " }}}
 " Source {{{
 source ~/.vim/spell/abbrev.vim
@@ -122,8 +122,8 @@ augroup END
 " }}}
 " Remapings {{{
 
-nnoremap <C-e> 2<C-e>
-nnoremap <C-y> 2<C-y>
+nnoremap <C-e> 4<C-e>
+nnoremap <C-y> 4<C-y>
 
 " currently cannot map <C-S-{}> and <C-{}> to different keys :(
 "nnoremap <C-S-A> <C-A>
@@ -230,11 +230,11 @@ set foldenable
 
 " TODO figure out: I think this saves all the modifications to a file (or all
 " the buffers open) and saves them in ~/.vim/view/ which are then kept
-augroup remember_folds
-    autocmd!
-    autocmd BufWinLeave * mkview
-    autocmd BufWinEnter * silent! loadview
-augroup END
+" augroup remember_folds
+"     autocmd!
+"     autocmd BufWinLeave * mkview
+"     autocmd BufWinEnter * silent! loadview
+" augroup END
 
 " expand tab
 set expandtab
@@ -253,9 +253,9 @@ set gdefault
 " expands every tab into spaces.
 set expandtab
 
-" tab length is equal to 4 spaces.
-set tabstop=4
-set shiftwidth=4
+" tab length is equal to 2 spaces.
+set tabstop=2
+set shiftwidth=2
 
 " history
 set history=50
@@ -293,8 +293,9 @@ set incsearch
 "leaves n lines between cursor and end of the screen
 set scrolloff=2
 
-"saves marks and jumps for the most recent 100files
-set viminfo='100,f1
+"saves marks and jumps for the most recent 1000files, limits each file size to
+"1000 lines.
+set viminfo='1000,f1,<1000
 
 set colorcolumn=121
 
@@ -363,6 +364,12 @@ endif
 
 " }}}
 " Test {{{
+
+" (aagg) Wed Oct 16 15:32:16 BST 2019
+map gn ]]zt
+map gp [[zt
+map gf ]]zt
+map gF [[zt
 
 " (aagg) Mon Oct  7 22:36:49 PDT 2019
 " Change cursor shape between insert and normal mode in iTerm2.app
