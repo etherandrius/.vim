@@ -32,6 +32,8 @@ Plug 'wincent/command-t' " fuzzy matching system
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
 Plug 'vim-scripts/MultipleSearch' " test
+Plug 'junegunn/limelight.vim' " test
+Plug 'junegunn/goyo.vim' " test
 
 
 
@@ -100,6 +102,37 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
+
+" }}}
+" {{{ MultipleSearch
+let g:MultipleSearchColorSequence = "yellow,cyan,magenta,green,blue,gray,brown,red"
+let g:MultipleSearchTextColorSequence = "black,black,black,black,white,white,white,white"
+" }}}
+" {{{ Goyo
+let g:goyo_width='120'
+let g:goyo_height='90%'
+let g:goyo_linenr='0'
+" }}}
+" {{{ limelight
+nnoremap <space>lt :Limelight!!<cr>
+" Functions
+let g:limelightindent=4
+function! LimeLightExtremeties()
+    let limelight_start_stop='^\s\{0,'.g:limelightindent.'\}\S'
+    let g:limelight_eop=limelight_start_stop
+    let g:limelight_bop=limelight_start_stop
+    Limelight!!
+    Limelight!!
+    echo 'limelightindent = '.g:limelightindent
+endfunction
+function! SetLimeLightIndent(count)
+    let g:limelightindent = a:count
+    if(g:limelightindent < 0)
+        g:limelightindent = 0
+    endif
+    call LimeLightExtremeties()
+endfunction
+command! -nargs=*  SetLimeLightIndent call SetLimeLightIndent(<args>)
 
 " }}}
 " }}}
