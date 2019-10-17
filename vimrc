@@ -5,12 +5,13 @@ set t_Co=256
 syntax on
 if has("gui_running")
 	let g:solarized_termcolors=256
-    colorscheme solarized
+  colorscheme solarized
+  highlight Comment cterm=italic gui=italic
 else
-	let g:solarized_termtrans = 1
 	let g:solarized_termcolors=16
-    colorscheme solarizedTerminal
+  colorscheme solarized
 endif
+" comments in italic
 
 if &diff 
 	set wrap
@@ -26,18 +27,21 @@ nmap <Space> <leader>
 call plug#begin()
 
 Plug 'djoshea/vim-autoread' 
-"Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/vim-lsp' " language server protocol
 Plug 'wincent/command-t' " fuzzy matching system 
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
-Plug 'vim-scripts/MultipleSearch' " test
-Plug 'junegunn/limelight.vim' " test
-Plug 'junegunn/goyo.vim' " test
+" Plug 'vim-scripts/MultipleSearch' " test
+Plug 'junegunn/limelight.vim' " 
+" Plug 'junegunn/goyo.vim' " test
+Plug 'scrooloose/nerdtree' " test
+
 
 
 
 call plug#end()
+" {{{ command-t
+let g:CommandTMaxFiles=5000
+" }}}
 " coc configuratio {{{
 lef g:go_def_mode='gopls'
 lef g:go_info_mode='gopls'
@@ -102,6 +106,9 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
+" disable vim-go :GoDoc shortcut (K)
+let g:go_doc_keywordprg_enabled = 0
+
 
 " }}}
 " {{{ MultipleSearch
@@ -135,6 +142,11 @@ endfunction
 command! -nargs=*  SetLimeLightIndent call SetLimeLightIndent(<args>)
 
 " }}}
+" {{{ NERDtree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+nnoremap gd :NERDTreeToggle<cr>
+" }}}
+
 " }}}
 " Source {{{
 source ~/.vim/spell/abbrev.vim
@@ -255,7 +267,7 @@ set formatoptions=crqlt
 set formatoptions-=o
 
 " gui foint
-set guifont=Monaco:h15
+set guifont=InputMono:h15
 
 " enable folding
 set foldenable
@@ -325,6 +337,7 @@ set incsearch
 
 "leaves n lines between cursor and end of the screen
 set scrolloff=2
+set sidescrolloff=10
 
 "saves marks and jumps for the most recent 1000files, limits each file size to
 "1000 lines.
