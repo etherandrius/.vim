@@ -30,9 +30,8 @@ Plug 'djoshea/vim-autoread'
 Plug 'wincent/command-t' " fuzzy matching system 
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
-" Plug 'vim-scripts/MultipleSearch' " test
+Plug 'vim-scripts/MultipleSearch'
 Plug 'junegunn/limelight.vim' " 
-" Plug 'junegunn/goyo.vim' " test
 Plug 'scrooloose/nerdtree' " test
 
 
@@ -40,7 +39,7 @@ Plug 'scrooloose/nerdtree' " test
 
 call plug#end()
 " {{{ command-t
-let g:CommandTMaxFiles=5000
+let g:CommandTMaxFiles=10000
 " }}}
 " coc configuratio {{{
 lef g:go_def_mode='gopls'
@@ -144,9 +143,8 @@ command! -nargs=*  SetLimeLightIndent call SetLimeLightIndent(<args>)
 " }}}
 " {{{ NERDtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-nnoremap gd :NERDTreeToggle<cr>
+" nnoremap gd :NERDTreeToggle<cr>
 " }}}
-
 " }}}
 " Source {{{
 source ~/.vim/spell/abbrev.vim
@@ -178,7 +176,6 @@ nnoremap <C-y> 4<C-y>
 "vnoremap <C-a> ^
 "nnoremap <C-e> $
 "vnoremap <C-e> $
-
 
 " more convenient remap
 map <C-q> %
@@ -298,9 +295,9 @@ set gdefault
 " expands every tab into spaces.
 set expandtab
 
-" tab length is equal to 2 spaces.
-set tabstop=2
-set shiftwidth=2
+" tab length is equal to 4 spaces.
+set tabstop=4
+set shiftwidth=4
 
 " history
 set history=50
@@ -320,7 +317,7 @@ set nowrap
 " highlights the current line.
 set cursorline
 
-" shows what <TAB> can autocomplete.
+" shows what <C-n> can autocomplete.
 set wildmenu
 
 " options for autocomplete
@@ -334,10 +331,10 @@ set lazyredraw
 set hlsearch
 set incsearch
 
-
 "leaves n lines between cursor and end of the screen
 set scrolloff=2
 set sidescrolloff=10
+set sidescroll=1
 
 "saves marks and jumps for the most recent 1000files, limits each file size to
 "1000 lines.
@@ -375,12 +372,16 @@ set visualbell t_vb=
 set matchpairs+=<:>
 
 " vim status line settings
+"
 set laststatus=2
-set statusline=%F " Filename
+set statusline=[%n] " buffer nubmer
+"set statusline+=%1*\ %<%f%* " filepath
+set statusline+=\ %<%f " filepath
 set statusline+=\ %y " Syntax
 set statusline+=%m " is modified
 set statusline+=%= " align to right
 set statusline+=%r " is read only 
+set statusline+=%q " quickfix list
 set statusline+=%h " is help file
 set statusline+=%w " is preview
 " set statusline+=[%p%%]\ " percentage how much in file you are along
@@ -412,8 +413,6 @@ endif
 " Test {{{
 
 " (aagg) Wed Oct 16 15:32:16 BST 2019
-map gn ]]zt
-map gp [[zt
 map gf ]]zt
 map gF [[zt
 
@@ -462,9 +461,10 @@ nnoremap <leader>h <C-w>h
 nnoremap <leader>H <C-w>H
 
 " search and fix the next misspeled word
-nnoremap }s ]sz=1<CR>1
-nnoremap {s [sz=1<CR>1
-nnoremap zf z=1<CR>1
+" THIS IS REALLY COOL BUT INTERFERS WITH PARAGRAPH JUMPING (aagg) Wed Oct 23 13:44:50 BST 2019
+"nnoremap }s ]sz=1<CR>1
+"nnoremap {s [sz=1<CR>1
+"nnoremap zf z=1<CR>1
 
 " for quickfix windows : when jumping to a location close the window 
 autocmd Filetype qf nnoremap <CR> <CR>:ccl<CR>
@@ -474,5 +474,5 @@ autocmd Filetype qf nnoremap <CR> <CR>:ccl<CR>
 "nnoremap j gj
 "nnoremap k gk
 
-" }}}
+" }}} 
 " vim: set foldmethod=marker: set foldlevel=0
