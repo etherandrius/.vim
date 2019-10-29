@@ -258,6 +258,9 @@ nmap <F2> :set invlist list?<CR>
 " ruby li
 set rubydll=/usr/local/opt/ruby/lib/libruby.2.6.dylib
 
+" setting default text width
+set textwidth=120
+
 " adjusting format options to my liking
 " :help fo-table for letter meanings.
 set formatoptions=crqlt
@@ -413,8 +416,8 @@ endif
 " Test {{{
 
 " (aagg) Wed Oct 16 15:32:16 BST 2019
-map gf ]]zt
-map gF [[zt
+map gf ]]zz
+map gF [[zz
 
 " (aagg) Mon Oct  7 22:36:49 PDT 2019
 " Change cursor shape between insert and normal mode in iTerm2.app
