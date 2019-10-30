@@ -18,8 +18,8 @@ if &diff
 endif
 
 let g:tex_flavor = "latex"
-let mapleader="\\"
-nmap <Space> <leader>
+let mapleader="\<Space>"
+"nmap <Space> <leader>
 "imap <Space> <leader>
 
 " Vim-Plug {{{
@@ -108,7 +108,16 @@ let g:go_def_mapping_enabled = 0
 " disable vim-go :GoDoc shortcut (K)
 let g:go_doc_keywordprg_enabled = 0
 
+" 
+let g:go_highlight_functions = 1
 
+let g:go_highlight_extra_types = 0
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_types = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_generate_tags = 1
 " }}}
 " {{{ MultipleSearch
 let g:MultipleSearchColorSequence = "yellow,cyan,magenta,green,blue,gray,brown,red"
@@ -120,7 +129,7 @@ let g:goyo_height='90%'
 let g:goyo_linenr='0'
 " }}}
 " {{{ limelight
-nnoremap <space>lt :Limelight!!<cr>
+nnoremap \lt :Limelight!!<cr>
 " Functions
 let g:limelightindent=4
 function! LimeLightExtremeties()
@@ -140,10 +149,16 @@ function! SetLimeLightIndent(count)
 endfunction
 command! -nargs=*  SetLimeLightIndent call SetLimeLightIndent(<args>)
 
+" Highlighting priority (default: 10)
+"   Set it to -1 not to overrule hlsearch
+let g:limelight_priority = -1
+
+
 " }}}
 " {{{ NERDtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" nnoremap gd :NERDTreeToggle<cr>
+nnoremap \tt :NERDTreeToggle<cr>
+nnoremap \tf :NERDTreeFind<cr>
 " }}}
 " }}}
 " Source {{{
@@ -377,8 +392,10 @@ set matchpairs+=<:>
 " vim status line settings
 "
 set laststatus=2
-set statusline=[%n] " buffer nubmer
+set statusline=""
+"set statusline+=[%n] " buffer nubmer
 "set statusline+=%1*\ %<%f%* " filepath
+"set statusline+=\ %<%f " filepath
 set statusline+=\ %<%f " filepath
 set statusline+=\ %y " Syntax
 set statusline+=%m " is modified
@@ -416,8 +433,8 @@ endif
 " Test {{{
 
 " (aagg) Wed Oct 16 15:32:16 BST 2019
-map gf ]]zz
-map gF [[zz
+map gf ]]zt
+map gF [[zt
 
 " (aagg) Mon Oct  7 22:36:49 PDT 2019
 " Change cursor shape between insert and normal mode in iTerm2.app
