@@ -183,6 +183,10 @@ augroup END
 " }}}
 " Remapings {{{
 
+" stay in the Visual mode when using shift commands
+xnoremap < <gv
+xnoremap > >gv
+
 nnoremap <C-e> 4<C-e>
 nnoremap <C-y> 4<C-y>
 
@@ -232,7 +236,9 @@ nmap <Space><Space> <Esc>h/<++><CR>:noh<CR>"_c4l
 
 " have Y behave analogously to D and C rather than to dd and cc (which is
 " already done by yy):
-noremap Y y$
+nnoremap Y y$
+" have U behave analogously to D and C rather than to dd and cc
+nnoremap U <C-r>
 
 " more comfortable split resizing
 nnoremap + :vertical resize +3<CR>
@@ -361,7 +367,7 @@ set sidescroll=1
 "1000 lines.
 set viminfo='1000,f1,<1000
 
-set colorcolumn=121
+set colorcolumn=81,101,121
 
 " use "[RO]" for "[readonly]" to save space in the message line:
 set shortmess+=r
@@ -399,9 +405,19 @@ set statusline=""
 "set statusline+=[%n] " buffer nubmer
 "set statusline+=%1*\ %<%f%* " filepath
 "set statusline+=\ %<%f " filepath
-set statusline+=\ %<%f " filepath
+"set statusline+=\ %<%f " filepath
+"
+"
+set statusline+=%<%{expand('%:p:h:t')}/
+set statusline+=%1*[%t]%*
+"set statusline+=[%t]
+
+"hi User1 cterm=bold ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83 gui=bold
+hi User1 ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83
+
 set statusline+=\ %y " Syntax
 set statusline+=%m " is modified
+set statusline+=%k " is modified
 set statusline+=%= " align to right
 set statusline+=%r " is read only 
 set statusline+=%q " quickfix list
@@ -409,6 +425,8 @@ set statusline+=%h " is help file
 set statusline+=%w " is preview
 " set statusline+=[%p%%]\ " percentage how much in file you are along
 set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
+
+
 
 " allow file custom settings with 
 set modeline
