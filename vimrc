@@ -22,6 +22,10 @@ let mapleader="\<Space>"
 "nmap <Space> <leader>
 "imap <Space> <leader>
 
+" {{{ netrw
+    let g:netrw_altfile = 1
+" }}}
+
 " Vim-Plug {{{
 
 call plug#begin()
@@ -351,6 +355,9 @@ set wildmenu
 set completeopt=menu,preview,noselect,menuone
 set complete=.,w,b,u,t,i,kspell
 
+" 
+syntax spell notoplevel
+
 " for performance.
 set lazyredraw
 
@@ -402,22 +409,17 @@ set matchpairs+=<:>
 "
 set laststatus=2
 set statusline=""
-"set statusline+=[%n] " buffer nubmer
-"set statusline+=%1*\ %<%f%* " filepath
-"set statusline+=\ %<%f " filepath
-"set statusline+=\ %<%f " filepath
-"
-"
-set statusline+=%<%{expand('%:p:h:t')}/
-set statusline+=%1*[%t]%*
-"set statusline+=[%t]
-
-"hi User1 cterm=bold ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83 gui=bold
-hi User1 ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83
-
-set statusline+=\ %y " Syntax
-set statusline+=%m " is modified
+set statusline+=\ %m " is modified
 set statusline+=%k " is modified
+set statusline+=%y " Syntax
+set statusline+=\ %1*[%t]%*\ 
+"set statusline+=(%<%{pathshorten(expand('%:h'))})
+set statusline+=(%<%{expand('%:h')})
+
+" aagg Thu Oct 31 19:39:53 GMT 2019
+" Is this useful?
+set statusline+=%{coc#status()}
+
 set statusline+=%= " align to right
 set statusline+=%r " is read only 
 set statusline+=%q " quickfix list
@@ -426,7 +428,8 @@ set statusline+=%w " is preview
 " set statusline+=[%p%%]\ " percentage how much in file you are along
 set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
 
-
+"hi User1 cterm=bold ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83 gui=bold
+hi User1 ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83
 
 " allow file custom settings with 
 set modeline
