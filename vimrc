@@ -22,9 +22,6 @@ let mapleader="\<Space>"
 "nmap <Space> <leader>
 "imap <Space> <leader>
 
-" {{{ netrw
-    let g:netrw_altfile = 1
-" }}}
 
 " Vim-Plug {{{
 
@@ -38,6 +35,7 @@ Plug 'vim-scripts/MultipleSearch'
 Plug 'junegunn/limelight.vim' " 
 Plug 'scrooloose/nerdtree' " need to learn this properly
 Plug 'tpope/vim-commentary' " 
+Plug 'terryma/vim-smooth-scroll'
 
 
 
@@ -167,6 +165,15 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 nnoremap \tt :NERDTreeToggle<cr>
 nnoremap \tf :NERDTreeFind<cr>
 " }}}
+" {{{ vim-smooth-scroll
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+" }}}
+" {{{ netrw
+    let g:netrw_altfile = 1
+" }}}
 " }}}
 " Source {{{
 source ~/.vim/spell/abbrev.vim
@@ -186,6 +193,8 @@ augroup END
 
 " }}}
 " Remapings {{{
+
+nmap Q nop
 
 " stay in the Visual mode when using shift commands
 xnoremap < <gv
@@ -402,8 +411,12 @@ set backspace=indent,eol,start
 " remove bell sounds from vim
 set visualbell t_vb=
 
-" add pointy brackets <:> to be matched with %
-set matchpairs+=<:>
+" add slashes to be a text object
+onoremap <silent> i/ :<C-u>normal! T/vt/<CR>
+onoremap <silent> a/ :<C-u>normal! F/vf/<CR>
+" and for visual mode
+xnoremap <silent> i/ :<C-u>normal! T/vt/<CR>
+xnoremap <silent> a/ :<C-u>normal! F/vf/<CR>
 
 function! StatusDiagnostic() abort
   let info = get(b:, 'coc_diagnostic_info', {})
