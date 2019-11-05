@@ -30,13 +30,14 @@ let mapleader="\<Space>"
 
 call plug#begin()
 
-Plug 'djoshea/vim-autoread' 
+Plug 'djoshea/vim-autoread'
 Plug 'wincent/command-t' " fuzzy matching system 
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
 Plug 'vim-scripts/MultipleSearch'
 Plug 'junegunn/limelight.vim' " 
-Plug 'scrooloose/nerdtree' " test
+Plug 'scrooloose/nerdtree' " need to learn this properly
+Plug 'tpope/vim-commentary' " 
 
 
 
@@ -78,8 +79,8 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> ge <Plug>(coc-diagnostic-next-error)
-nmap <silent> gE <Plug>(coc-diagnostic-prev-error)
+nmap <silent> ge <Plug>(coc-diagnostic-next)
+nmap <silent> gE <Plug>(coc-diagnostic-prev)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
@@ -96,12 +97,16 @@ nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
 nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
+" Outline of the document
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+" auto-organize imports
+" gives error *[coc.nvim] Orgnize import action not found.* including misspeled Orgnize
+" autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
 
 " }}} 
 " vim-go configuration {{{
@@ -129,11 +134,6 @@ let g:go_highlight_generate_tags = 1
 " {{{ MultipleSearch
 let g:MultipleSearchColorSequence = "yellow,cyan,magenta,green,blue,gray,brown,red"
 let g:MultipleSearchTextColorSequence = "black,black,black,black,white,white,white,white"
-" }}}
-" {{{ Goyo
-let g:goyo_width='120'
-let g:goyo_height='90%'
-let g:goyo_linenr='0'
 " }}}
 " {{{ limelight
 nnoremap \lt :Limelight!!<cr>
@@ -405,6 +405,19 @@ set visualbell t_vb=
 " add pointy brackets <:> to be matched with %
 set matchpairs+=<:>
 
+function! StatusDiagnostic() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info) | return '' | endif
+  let msgs = []
+  if get(info, 'error', 0)
+    call add(msgs, '✖ ' . info['error'])
+  endif
+  if get(info, 'warning', 0)
+    call add(msgs, '⚠ ' . info['warning'])
+  endif
+  return join(msgs, ' ') . ' ' . get(g:, 'coc_status', '')
+endfunction
+
 " vim status line settings
 "
 set laststatus=2
@@ -414,11 +427,12 @@ set statusline+=%k " is modified
 set statusline+=%y " Syntax
 set statusline+=\ %1*[%t]%*\ 
 "set statusline+=(%<%{pathshorten(expand('%:h'))})
-set statusline+=(%<%{expand('%:h')})
+set statusline+=(%<%{expand('%:h')})\ 
 
 " aagg Thu Oct 31 19:39:53 GMT 2019
 " Is this useful?
-set statusline+=%{coc#status()}
+"set statusline+=%{coc#status()}
+set statusline+=%{StatusDiagnostic()}
 
 set statusline+=%= " align to right
 set statusline+=%r " is read only 
