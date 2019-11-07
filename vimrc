@@ -445,9 +445,13 @@ set statusline+=\ %1*[%t]%*\
 "set statusline+=(%<%{pathshorten(expand('%:h'))})
 set statusline+=(%<%{expand('%:h')})\ 
 
+function! GetTitleString() abort
+  return split(getcwd(), '/')[-1]
+endfunction
+
 " vim title settings - kinda funky care 
 set titlestring=""
-set titlestring+=%t\ -\ %{system('~/.vim/./project-name.sh')}
+set titlestring+=%{GetTitleString()}\ -\ [%t]\ %M\ -\ VIM
 
 " aagg Thu Oct 31 19:39:53 GMT 2019
 " Is this useful?
