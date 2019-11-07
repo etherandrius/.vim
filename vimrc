@@ -166,10 +166,13 @@ nnoremap \tt :NERDTreeToggle<cr>
 nnoremap \tf :NERDTreeFind<cr>
 " }}}
 " {{{ vim-smooth-scroll
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+if has("gui_running")
+    noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 6)<CR>
+    noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 6)<CR>
+else
+    noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+    noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+endif
 " }}}
 " {{{ netrw
     let g:netrw_altfile = 1
@@ -441,6 +444,10 @@ set statusline+=%y " Syntax
 set statusline+=\ %1*[%t]%*\ 
 "set statusline+=(%<%{pathshorten(expand('%:h'))})
 set statusline+=(%<%{expand('%:h')})\ 
+
+" vim title settings - kinda funky care 
+set titlestring=""
+set titlestring+=%t\ -\ %{system('~/.vim/./project-name.sh')}
 
 " aagg Thu Oct 31 19:39:53 GMT 2019
 " Is this useful?
