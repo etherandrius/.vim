@@ -11,9 +11,13 @@
   }, 
   "coc.preferences.useQuickfixForLocations": false,
   "list.normalMappings": {
-    "<C-c>": "do:exit"
+    "<C-c>": "do:exit",
+    "<C-n>": "do:next",
+    "<C-p>": "do:previous"
   },
   "list.insertMappings": {
-    "<C-c>": "do:exit"
+    "<C-c>": "do:exit",
+    "<C-n>": "do:next",
+    "<C-p>": "do:previous"
   }
 }

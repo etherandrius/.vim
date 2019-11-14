@@ -35,7 +35,6 @@ Plug 'vim-scripts/MultipleSearch'
 Plug 'junegunn/limelight.vim' " 
 Plug 'scrooloose/nerdtree' " need to learn this properly
 Plug 'tpope/vim-commentary' " 
-Plug 'terryma/vim-smooth-scroll'
 
 
 
@@ -165,15 +164,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 nnoremap \tt :NERDTreeToggle<cr>
 nnoremap \tf :NERDTreeFind<cr>
 " }}}
-" {{{ vim-smooth-scroll
-if has("gui_running")
-    noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 6)<CR>
-    noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 6)<CR>
-else
-    noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-    noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
-endif
-" }}}
 " {{{ netrw
     let g:netrw_altfile = 1
 " }}}
@@ -202,9 +192,6 @@ nmap Q nop
 " stay in the Visual mode when using shift commands
 xnoremap < <gv
 xnoremap > >gv
-
-nnoremap <C-e> 4<C-e>
-nnoremap <C-y> 4<C-y>
 
 " currently cannot map <C-S-{}> and <C-{}> to different keys :(
 "nnoremap <C-S-A> <C-A>
@@ -269,6 +256,8 @@ vnoremap K k:join<CR>
 " move to beginning/end of line.
 " nnoremap B ^
 " nnoremap E $
+
+nnoremap : ;
 
 nnoremap ; :
 vnoremap ; :
@@ -469,6 +458,9 @@ set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
 "hi User1 cterm=bold ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83 gui=bold
 hi User1 ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83
 
+" better colors for matched parenthesis 
+hi MatchParen gui=bold guibg=#eee8d5 guifg=#dc322f
+
 " allow file custom settings with 
 set modeline
 " }}} 
@@ -494,9 +486,13 @@ endif
 " }}}
 " Test {{{
 
+" (aagg) Fri Nov  8 12:55:48 GMT 2019
+nnoremap <C-j> j<C-e>
+nnoremap <C-k> k<C-y>
+
 " (aagg) Wed Oct 16 15:32:16 BST 2019
-map gf ]]zt
-map gF [[zt
+map gf ]]ze
+map gF [[ze
 
 " (aagg) Mon Oct  7 22:36:49 PDT 2019
 " Change cursor shape between insert and normal mode in iTerm2.app
@@ -550,6 +546,45 @@ nnoremap <leader>H <C-w>H
 
 " for quickfix windows : when jumping to a location close the window 
 autocmd Filetype qf nnoremap <CR> <CR>:ccl<CR>
+
+" quarter scroll
+function! ScrollQuarter(move)
+    let height=winheight(0)
+
+    if a:move == 'up'
+        let key="\<C-Y>"
+    else
+        let key="\<C-E>"
+    endif
+
+    execute 'normal! ' . height/4 . key
+endfunction
+
+" TODO FIX
+function! EyeLevel()
+    let height=winheight(0)
+    let line=getline('.')
+    let quarter=height/4
+    let half=height/2
+    let key="\<C-E>"
+
+    if (line < quarter)
+        return
+    else 
+        if (line < half) 
+            execute 'normal! '. (line - quarter) . key
+            return 
+        else 
+            execute 'normal! ' . height/4 . key
+endif
+    endif
+return
+endfunction
+
+nnoremap <silent> <c-y> :call ScrollQuarter('up')<CR>
+nnoremap <silent> <c-e> :call ScrollQuarter('down')<CR>
+nnoremap <silent> ze zz:call ScrollQuarter('down')<CR>" z eye level
+"nnoremap <silent> ze :call EyeLevel()<CR>" z eye level
 
 "" DISABLED : messes with quickfix windows
 " if your line is wrapped it j,k won't skip the wrapped bit.
