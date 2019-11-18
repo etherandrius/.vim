@@ -35,6 +35,7 @@ Plug 'vim-scripts/MultipleSearch'
 Plug 'junegunn/limelight.vim' " 
 Plug 'scrooloose/nerdtree' " need to learn this properly
 Plug 'tpope/vim-commentary' " 
+Plug 'vim-scripts/ZoomWin'
 
 
 
@@ -197,11 +198,6 @@ xnoremap > >gv
 "nnoremap <C-S-A> <C-A>
 "nnoremap <C-S-X> <C-X>
 
-"nnoremap <C-a> ^
-"vnoremap <C-a> ^
-"nnoremap <C-e> $
-"vnoremap <C-e> $
-
 " more convenient remap
 map <C-q> %
 " not convinced about the insert one yet
@@ -244,8 +240,8 @@ nnoremap Y y$
 nnoremap U <C-r>
 
 " more comfortable split resizing
-nnoremap + :vertical resize +3<CR>
-nnoremap = :vertical resize +3<CR>
+nnoremap <silent> + :vertical resize +3<CR>
+nnoremap <silent> = :vertical resize +3<CR>
 nnoremap - :vertical resize -3<CR>
 nnoremap < :resize -1<CR>
 nnoremap > :resize +1<CR>
@@ -486,6 +482,16 @@ endif
 " }}}
 " Test {{{
 
+" Copy to clipboard
+noremap <leader>y "*y
+" Copy w command-C only works in MacVim
+noremap <D-c> "*y
+
+
+"
+nnoremap <C-d> :keepjumps normal Lzz<CR>
+nnoremap <C-u> :keepjumps normal Hzz<CR>
+
 " (aagg) Fri Nov  8 12:55:48 GMT 2019
 nnoremap <C-j> j<C-e>
 nnoremap <C-k> k<C-y>
@@ -558,6 +564,10 @@ function! ScrollQuarter(move)
     endif
 
     execute 'normal! ' . height/4 . key
+endfunction
+
+function! CenterFunction() 
+    :keepjumps normal m9][[[`9
 endfunction
 
 " TODO FIX
