@@ -132,6 +132,7 @@ let g:go_highlight_generate_tags = 1
 " {{{ MultipleSearch
 let g:MultipleSearchColorSequence = "yellow,cyan,magenta,green,blue,gray,brown,red"
 let g:MultipleSearchTextColorSequence = "black,black,black,black,white,white,white,white"
+let g:MultipleSearchMaxColors = 8
 " }}}
 " {{{ limelight
 nnoremap \lt :Limelight!!<cr>
