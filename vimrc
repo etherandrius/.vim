@@ -36,6 +36,7 @@ Plug 'junegunn/limelight.vim' "
 Plug 'scrooloose/nerdtree' " need to learn this properly
 Plug 'tpope/vim-commentary' " 
 Plug 'vim-scripts/ZoomWin'
+Plug 'vim-scripts/argtextobj.vim'
 
 
 
@@ -100,7 +101,7 @@ nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
 " nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
-" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " auto-organize imports
 " gives error *[coc.nvim] Orgnize import action not found.* including misspeled Orgnize
@@ -133,6 +134,7 @@ let g:go_highlight_generate_tags = 1
 let g:MultipleSearchColorSequence = "yellow,cyan,magenta,green,blue,gray,brown,red"
 let g:MultipleSearchTextColorSequence = "black,black,black,black,white,white,white,white"
 let g:MultipleSearchMaxColors = 8
+command -nargs=0 Noh :noh | :SearchReset
 " }}}
 " {{{ limelight
 nnoremap \lt :Limelight!!<cr>
@@ -163,8 +165,9 @@ let g:limelight_priority = -1
 " }}}
 " {{{ NERDtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-nnoremap \tt :NERDTreeToggle<cr>
-nnoremap \tf :NERDTreeFind<cr>
+nnoremap \tt :NERDTreeToggle<cr> " tree toggle 
+nnoremap \tf :NERDTreeFind<cr>   " tree find
+nnoremap \tg :NERDTreeFocus<cr>  " tree go 
 " }}}
 " {{{ netrw
     let g:netrw_altfile = 1
@@ -213,11 +216,11 @@ vnoremap <C-c> <Esc><Esc>
 " <leader>d deletes current buffer and keeps the split
 nnoremap <silent> <leader>d :lclose<bar>b#<bar>bd #<CR>
 " <leader>n next buffer
-nnoremap <silent> <leader>n :bn<CR>  
-nnoremap <silent> <leader>N :bp<CR>  
+" nnoremap <silent> <leader>n :bn<CR>  
+" nnoremap <silent> <leader>N :bp<CR>  
 " <leader>p previous buffer
-nnoremap <silent> <leader>p :bp<CR>
-nnoremap <silent> <leader>P :bn<CR>
+" nnoremap <silent> <leader>p :bp<CR>
+" nnoremap <silent> <leader>P :bn<CR>
 
 "making shift tab work as backwards tab.
 inoremap <S-Tab> <C-d>
@@ -488,14 +491,33 @@ noremap <leader>y "*y
 " Copy w command-C only works in MacVim
 noremap <D-c> "*y
 
+function! CD()
+    let height=winheight(0)/2
+execute 'normal ' . height . "\<C-j>"
+endfunction
+function! CU()
+    let height=winheight(0)/2
+execute 'normal ' . height . "\<C-k>"
+endfunction
 
 "
-nnoremap <C-d> :keepjumps normal Lzz<CR>
-nnoremap <C-u> :keepjumps normal Hzz<CR>
+"nnoremap <C-d> :keepjumps normal Lzz<CR>
+"nnoremap <C-u> :keepjumps normal Hzz<CR>
+"nnoremap <C-d> :call CD()<CR>
+"nnoremap <C-u> :call CU()<CR>
+" 
+function! CJ()
+execute 'normal! j' . "\<C-E>"
+endfunction
+" 
+function! CK()
+execute 'normal! k' . "\<C-y>"
+endfunction
 
 " (aagg) Fri Nov  8 12:55:48 GMT 2019
-nnoremap <C-j> j<C-e>
-nnoremap <C-k> k<C-y>
+nnoremap <C-j> :call CJ()<CR>
+nnoremap <C-k> :call CK()<CR>
+
 
 " (aagg) Wed Oct 16 15:32:16 BST 2019
 map gf ]]ze
@@ -567,9 +589,15 @@ function! ScrollQuarter(move)
     execute 'normal! ' . height/4 . key
 endfunction
 
+
 function! CenterFunction() 
     :keepjumps normal m9][[[`9
 endfunction
+
+" easier source 
+command -nargs=0 Source :source ~/.vimrc
+
+command -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
 
 " TODO FIX
 function! EyeLevel()
@@ -603,4 +631,5 @@ nnoremap <silent> ze zz:call ScrollQuarter('down')<CR>" z eye level
 "nnoremap k gk
 
 " }}} 
+
 " vim: set foldmethod=marker: set foldlevel=0
