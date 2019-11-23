@@ -37,9 +37,7 @@ Plug 'scrooloose/nerdtree' " need to learn this properly
 Plug 'tpope/vim-commentary' " 
 Plug 'vim-scripts/ZoomWin'
 Plug 'vim-scripts/argtextobj.vim'
-
-
-
+Plug 'wellle/targets.vim'
 
 call plug#end()
 " {{{ command-t
@@ -402,13 +400,6 @@ set backspace=indent,eol,start
 
 " remove bell sounds from vim
 set visualbell t_vb=
-
-" add slashes to be a text object
-onoremap <silent> i/ :<C-u>normal! T/vt/<CR>
-onoremap <silent> a/ :<C-u>normal! F/vf/<CR>
-" and for visual mode
-xnoremap <silent> i/ :<C-u>normal! T/vt/<CR>
-xnoremap <silent> a/ :<C-u>normal! F/vf/<CR>
 
 function! StatusDiagnostic() abort
   let info = get(b:, 'coc_diagnostic_info', {})
