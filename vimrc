@@ -283,7 +283,9 @@ nmap <F2> :set invlist list?<CR>
 
 
 " ruby li
-set rubydll=/usr/local/opt/ruby/lib/libruby.2.6.dylib
+if !has('nvim')
+    set rubydll=/usr/local/opt/ruby/lib/libruby.2.6.dylib
+endif
 
 " setting default text width
 set textwidth=120
