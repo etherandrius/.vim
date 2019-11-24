@@ -36,7 +36,6 @@ Plug 'junegunn/limelight.vim' "
 Plug 'scrooloose/nerdtree' " need to learn this properly
 Plug 'tpope/vim-commentary' " 
 Plug 'vim-scripts/ZoomWin'
-Plug 'vim-scripts/argtextobj.vim'
 Plug 'wellle/targets.vim'
 
 call plug#end()
@@ -44,8 +43,6 @@ call plug#end()
 let g:CommandTMaxFiles=10000
 " }}}
 " coc configuratio {{{
-lef g:go_def_mode='gopls'
-lef g:go_info_mode='gopls'
 " if hidden is not set, TextEdit might fail.
 set hidden
 " Better display for messages
@@ -116,6 +113,9 @@ let g:go_doc_keywordprg_enabled = 0
 
 "
 let g:go_fmt_fail_silently = 1
+let g:go_fmt_autosave = 0
+let g:go_doc_popup_window = 1 
+nnoremap <silent> gD :GoDoc<CR>
 
 " 
 let g:go_highlight_functions = 1

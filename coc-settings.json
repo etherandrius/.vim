@@ -9,7 +9,7 @@
       }
    }
   }, 
-  "coc.preferences.useQuickfixForLocations": false,
+  "coc.preferences.useQuickfixForLocations": true,
   "list.normalMappings": {
     "<C-c>": "do:exit",
     "<C-n>": "do:next",
