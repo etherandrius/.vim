@@ -33,12 +33,17 @@ Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
 Plug 'vim-scripts/MultipleSearch'
 Plug 'junegunn/limelight.vim' " 
+Plug 'junegunn/goyo.vim'
 Plug 'scrooloose/nerdtree' " need to learn this properly
 Plug 'tpope/vim-commentary' " 
 Plug 'vim-scripts/ZoomWin'
 Plug 'wellle/targets.vim'
+Plug 'kshenoy/vim-signature'
 
 call plug#end()
+" {{{ goyo
+let g:goyo_width = 81
+" }}}
 " {{{ command-t
 let g:CommandTMaxFiles=10000
 " }}}
@@ -57,11 +62,11 @@ set signcolumn=yes
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -78,6 +83,26 @@ nmap <silent> gE <Plug>(coc-diagnostic-prev)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> gD :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Use `:Fmt` to format current buffer
+command! -nargs=0 Fmt :call CocAction('format')
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
@@ -111,11 +136,20 @@ let g:go_def_mapping_enabled = 0
 " disable vim-go :GoDoc shortcut (K)
 let g:go_doc_keywordprg_enabled = 0
 
+" 
+let g:go_addtags_transform = 'camelcase'
+
+" override the default goFunctionCall color.
+hi def link goFunctionCall Function
+
 "
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_autosave = 0
 let g:go_doc_popup_window = 1 
-nnoremap <silent> gD :GoDoc<CR>
+let g:go_list_type_commands = {"GoImplements": "quickfix"}
+"nnoremap <silent> gD :GoDoc<CR>
+
+nmap <silent> gI :GoImplements<CR>
 
 " 
 let g:go_highlight_functions = 1
@@ -190,7 +224,7 @@ augroup END
 " }}}
 " Remapings {{{
 
-nmap Q nop
+nmap Q <Nop>
 
 " stay in the Visual mode when using shift commands
 xnoremap < <gv
@@ -214,8 +248,8 @@ vnoremap <C-c> <Esc><Esc>
 " <leader>d deletes current buffer and keeps the split
 nnoremap <silent> <leader>d :lclose<bar>b#<bar>bd #<CR>
 " <leader>n next buffer
-" nnoremap <silent> <leader>n :bn<CR>  
-" nnoremap <silent> <leader>N :bp<CR>  
+nnoremap <silent> <leader>n :bn<CR>  
+nnoremap <silent> <leader>N :bp<CR>  
 " <leader>p previous buffer
 " nnoremap <silent> <leader>p :bp<CR>
 " nnoremap <silent> <leader>P :bn<CR>
@@ -248,14 +282,12 @@ nnoremap - :vertical resize -3<CR>
 nnoremap < :resize -1<CR>
 nnoremap > :resize +1<CR>
 " make K act analogous to J
-nnoremap K k:join<CR>
-vnoremap K k:join<CR>
+nnoremap K kJ
+vnoremap K kJ
 
 " move to beginning/end of line.
 " nnoremap B ^
 " nnoremap E $
-
-nnoremap : ;
 
 nnoremap ; :
 vnoremap ; :
@@ -296,7 +328,7 @@ set formatoptions=crqlt
 set formatoptions-=o
 
 " gui foint
-set guifont=InputMono:h15
+set guifont=InputMono:h13
 
 " enable folding
 set foldenable
@@ -416,17 +448,6 @@ function! StatusDiagnostic() abort
   return join(msgs, ' ') . ' ' . get(g:, 'coc_status', '')
 endfunction
 
-" vim status line settings
-"
-set laststatus=2
-set statusline=""
-set statusline+=\ %m " is modified
-set statusline+=%k " is modified
-set statusline+=%y " Syntax
-set statusline+=\ %1*[%t]%*\ 
-"set statusline+=(%<%{pathshorten(expand('%:h'))})
-set statusline+=(%<%{expand('%:h')})\ 
-
 function! GetTitleString() abort
   return split(getcwd(), '/')[-1]
 endfunction
@@ -435,11 +456,17 @@ endfunction
 set titlestring=""
 set titlestring+=%{GetTitleString()}\ -\ [%t]\ %M\ -\ VIM
 
-" aagg Thu Oct 31 19:39:53 GMT 2019
-" Is this useful?
-"set statusline+=%{coc#status()}
-set statusline+=%{StatusDiagnostic()}
+" vim status line settings
+set laststatus=2
+set statusline=""
+set statusline+=\ %m " is modified
+set statusline+=%k " is modified
+set statusline+=%y " Syntax
+set statusline+=\ %1*[%t]%*\ 
 
+"set statusline+=(%<%{pathshorten(expand('%:h'))})
+set statusline+=(%<%{expand('%:h')})\ 
+set statusline+=%{StatusDiagnostic()}
 set statusline+=%= " align to right
 set statusline+=%r " is read only 
 set statusline+=%q " quickfix list
@@ -478,6 +505,45 @@ endif
 
 " }}}
 " Test {{{
+
+" (aagg) Wed Feb 19 15:36:47 GMT 2020
+function! GoGrep_Fun(pattern)
+  execute "grep -i '" . a:pattern . "' -r * --exclude-dir=vendor --exclude-dir=mocks --exclude='*test.go' --include='*.go'"
+endfunction
+command! -nargs=1 GGrep call GoGrep_Fun(<q-args>)
+command! -nargs=1 FFrep call GoGrep_Fun(<q-args>)
+
+function! GoGrepI_Fun(pattern)
+  execute "grep '" . a:pattern . "' -r * --exclude-dir=vendor --exclude-dir=mocks --exclude='*test.go' --include='*.go'"
+endfunction
+command! -nargs=1 GGrepI call GoGrepI_Fun(<q-args>)
+command! -nargs=1 FFrepI call GoGrepI_Fun(<q-args>)
+
+function! GoGrep_Fun_Tests(pattern)
+  execute "grep -i '" . a:pattern . "' -r * --exclude-dir=vendor --exclude-dir=mocks --include='*test.go'"
+endfunction
+command! -nargs=1 GGrepTest call GoGrep_Fun_Tests(<q-args>)
+command! -nargs=1 FFrepTest call GoGrep_Fun_Tests(<q-args>)
+
+function! GoGrep_Fun_Vendor(pattern)
+  execute "grep -i '" . a:pattern . "' -r vendor/*  --include='*.go'"
+endfunction
+command! -nargs=1 GGrepVendor call GoGrep_Fun_Vendor(<q-args>)
+command! -nargs=1 FFrepVendor call GoGrep_Fun_Vendor(<q-args>)
+
+" (aagg) Wed Feb 19 16:45:52 GMT 2020
+nmap <C-n> :cn<CR>
+nmap <C-p> :cp<CR>
+
+" to delete a function and everything around it
+nmap daf daf"_dd"_dd
+
+" search for highlighted text with *
+vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
+
+" In line search
+nnoremap <C-l> ;
+nnoremap <C-h> ,
 
 " Copy to clipboard
 noremap <leader>y "*y
@@ -538,7 +604,7 @@ endif
 "    endif
 "endfunction
 
-" ]s jumps to next misspeled word, z= fixes a mispeleed word
+" ]s jumps to next misspelled word, z= fixes a misspelled word
 
 nnoremap :b :buffers 
 
@@ -548,6 +614,9 @@ nnoremap :td :tabclose
 
 nnoremap <C-w>n :bn<CR>
 nnoremap <C-w>p :bp<CR>
+nnoremap <C-w><C-c> <Nop>
+nnoremap <C-w>c <Nop>
+nnoremap <C-w>C <Nop>
 
 nnoremap <leader>w <C-w>w
 nnoremap <leader>W <C-w>W
@@ -592,7 +661,7 @@ command -nargs=0 Source :source ~/.vimrc
 
 command -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
 
-" TODO FIX
+" TODO FIX (I forgot what's broken :/)
 function! EyeLevel()
     let height=winheight(0)
     let line=getline('.')
