@@ -1,5 +1,14 @@
 {
   "languageserver": {
+    "cquery": {
+      "command": "/Users/agrabauskas/bin/cquery/build/release/bin/cquery",
+      "args": ["--log-file=/tmp/cq.log"],
+      "filetypes": ["c", "cpp"],
+      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".git/", ".hg/"],
+      "initializationOptions": {
+        "cacheDirectory": "/tmp/cquery"
+      }
+    },
     "golang": {
       "command": "gopls",
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],

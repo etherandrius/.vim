@@ -34,11 +34,15 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
 Plug 'vim-scripts/MultipleSearch'
 Plug 'junegunn/limelight.vim' " 
 Plug 'junegunn/goyo.vim'
-Plug 'scrooloose/nerdtree' " need to learn this properly
+Plug 'scrooloose/nerdtree' " need to learn this properly or change to vifm
 Plug 'tpope/vim-commentary' " 
 Plug 'vim-scripts/ZoomWin'
 Plug 'wellle/targets.vim'
 Plug 'kshenoy/vim-signature'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'rodjek/vim-puppet'
+Plug 'vifm/vifm.vim'
+
 
 call plug#end()
 " {{{ goyo
@@ -204,6 +208,18 @@ nnoremap \tg :NERDTreeFocus<cr>  " tree go
 " {{{ netrw
     let g:netrw_altfile = 1
 " }}}
+" {{{ vim indent guides
+    let g:indent_guides_enable_on_vim_startup = 1
+    let g:indent_guides_guide_size = 1
+    let g:indent_guides_start_level = 1
+    if has("gui_running")
+        let g:indent_guides_auto_colors = 0
+        autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#fdf7ea 
+        autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#fbf1d8
+    else
+        let g:indent_guides_auto_colors = 1
+    endif
+" }}}
 " }}}
 " Source {{{
 source ~/.vim/spell/abbrev.vim
@@ -341,9 +357,6 @@ set foldenable
 "     autocmd BufWinLeave * mkview
 "     autocmd BufWinEnter * silent! loadview
 " augroup END
-
-" expand tab
-set expandtab
 
 " enable numbers and relative numbers
 set relativenumber
@@ -506,27 +519,35 @@ endif
 " }}}
 " Test {{{
 
+
+" (aagg) Mon Apr 20 12:45:05 BST 2020
+function! GoGrep_Fun_Puppet(pattern)
+  execute "grep -i \"" . a:pattern . "\" -r * --exclude-dir=vendor --include='*.pp'"
+endfunction
+command! -nargs=1 GPuppet call GoGrep_Fun_Puppet(<q-args>)
+
+
 " (aagg) Wed Feb 19 15:36:47 GMT 2020
 function! GoGrep_Fun(pattern)
-  execute "grep -i '" . a:pattern . "' -r * --exclude-dir=vendor --exclude-dir=mocks --exclude='*test.go' --include='*.go'"
+  execute "grep -i \"" . a:pattern . "\" -r * --exclude-dir=vendor --exclude-dir=mocks --exclude='*test.go' --include='*.go'"
 endfunction
 command! -nargs=1 GGrep call GoGrep_Fun(<q-args>)
 command! -nargs=1 FFrep call GoGrep_Fun(<q-args>)
 
 function! GoGrepI_Fun(pattern)
-  execute "grep '" . a:pattern . "' -r * --exclude-dir=vendor --exclude-dir=mocks --exclude='*test.go' --include='*.go'"
+  execute "grep \"" . a:pattern . "\" -r * --exclude-dir=vendor --exclude-dir=mocks --exclude='*test.go' --include='*.go'"
 endfunction
 command! -nargs=1 GGrepI call GoGrepI_Fun(<q-args>)
 command! -nargs=1 FFrepI call GoGrepI_Fun(<q-args>)
 
 function! GoGrep_Fun_Tests(pattern)
-  execute "grep -i '" . a:pattern . "' -r * --exclude-dir=vendor --exclude-dir=mocks --include='*test.go'"
+  execute "grep -i \"" . a:pattern . "\" -r * --exclude-dir=vendor --exclude-dir=mocks --include='*test.go'"
 endfunction
 command! -nargs=1 GGrepTest call GoGrep_Fun_Tests(<q-args>)
 command! -nargs=1 FFrepTest call GoGrep_Fun_Tests(<q-args>)
 
 function! GoGrep_Fun_Vendor(pattern)
-  execute "grep -i '" . a:pattern . "' -r vendor/*  --include='*.go'"
+  execute "grep -i \"" . a:pattern . "\" -r vendor/*  --include='*.go'"
 endfunction
 command! -nargs=1 GGrepVendor call GoGrep_Fun_Vendor(<q-args>)
 command! -nargs=1 FFrepVendor call GoGrep_Fun_Vendor(<q-args>)
@@ -547,8 +568,6 @@ nnoremap <C-h> ,
 
 " Copy to clipboard
 noremap <leader>y "*y
-" Copy w command-C only works in MacVim
-noremap <D-c> "*y
 
 function! CD()
     let height=winheight(0)/2
