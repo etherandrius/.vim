@@ -9,6 +9,13 @@
         "cacheDirectory": "/tmp/cquery"
       }
     },
+    "puppet": {
+      "command": "ruby",
+      "args": ["/Users/agrabauskas/bin/puppet-editor-services/puppet-languageserver"],
+      "cwd": "/Users/agrabauskas/bin/puppet-editor-services",
+      "filetypes": ["puppet"],
+      "rootPatterns": [".git/", "metadata.json"]
+    },
     "golang": {
       "command": "gopls",
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],

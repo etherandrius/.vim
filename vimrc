@@ -11,7 +11,6 @@ else
 	let g:solarized_termcolors=16
   colorscheme solarized
 endif
-" comments in italic
 
 if &diff 
 	set wrap
@@ -28,19 +27,20 @@ let mapleader="\<Space>"
 call plug#begin()
 
 Plug 'djoshea/vim-autoread'
-Plug 'wincent/command-t' " fuzzy matching system 
+Plug 'wincent/command-t' " fuzzy matching system - consider using fzf instead
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
-Plug 'vim-scripts/MultipleSearch'
-Plug 'junegunn/limelight.vim' " 
-Plug 'junegunn/goyo.vim'
+Plug 'vim-scripts/MultipleSearch' " might be a time to let this one go
+Plug 'junegunn/limelight.vim' " rarely used 
+Plug 'junegunn/goyo.vim' " same as limelight
 Plug 'scrooloose/nerdtree' " need to learn this properly or change to vifm
-Plug 'tpope/vim-commentary' " 
-Plug 'vim-scripts/ZoomWin'
-Plug 'wellle/targets.vim'
-Plug 'kshenoy/vim-signature'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'rodjek/vim-puppet'
+Plug 'tpope/vim-commentary' " essential
+Plug 'tpope/vim-fugitive' " essential
+Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
+Plug 'wellle/targets.vim' " arguments objects - try finding an alternative
+Plug 'kshenoy/vim-signature' " shows marks
+Plug 'nathanaelkane/vim-indent-guides' " highlights indentation
+Plug 'rodjek/vim-puppet' " rip out
 Plug 'vifm/vifm.vim'
 
 
@@ -219,6 +219,11 @@ nnoremap \tg :NERDTreeFocus<cr>  " tree go
     else
         let g:indent_guides_auto_colors = 1
     endif
+" }}}
+" {{{ vim-fugitive rhubarb
+
+let g:github_enterprise_urls = ['https://github.palantir.build']
+
 " }}}
 " }}}
 " Source {{{
@@ -519,6 +524,85 @@ endif
 " }}}
 " Test {{{
 
+" Jump to the next or previous line that has the same level or a lower
+" level of indentation than the current line.
+"
+" exclusive (bool): true: Motion is exclusive
+" false: Motion is inclusive
+" fwd (bool): true: Go to next line
+" false: Go to previous line
+" lowerlevel (bool): true: Go to line with lower indentation level
+" false: Go to line with the same indentation level
+" skipblanks (bool): true: Skip blank lines
+" false: Don't skip blank lines
+function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
+  let line = line('.')
+  let column = col('.')
+  let lastline = line('$')
+  let indent = indent(line)
+  let stepvalue = a:fwd ? 1 : -1
+  echo indent
+
+  " adds the current position to the jump list
+  normal! m`
+  call cursor(line, column)
+
+  " special case for indent 0 in order to not jump to the start/end of the file.
+  if indent == 0
+      if a:fwd
+        exe "normal }"
+        if a:exclusive
+            exe "normal k"
+        endif
+        return
+      endif
+      exe "normal {"
+      if a:exclusive
+          exe "normal j"
+      endif
+      return
+  endif
+
+  while (line > 0 && line <= lastline)
+    let line = line + stepvalue
+    if ( ! a:lowerlevel && indent(line) == indent || a:lowerlevel && indent(line) < indent)
+      if (! a:skipblanks || strlen(getline(line)) > 0)
+        if (a:exclusive)
+          let line = line - stepvalue
+        endif
+        exe line
+        exe "normal " column . "|"
+        return
+      endif
+    endif
+  endwhile
+endfunction
+
+nnoremap <silent> <C-h> :call NextIndent(0, 0, 1, 1)<CR>
+nnoremap <silent> <C-l> :call NextIndent(0, 1, 1, 1)<CR>
+nnoremap <silent> <C-k> :call NextIndent(1, 0, 1, 0)<CR>
+nnoremap <silent> <C-j> :call NextIndent(1, 1, 1, 0)<CR>
+
+
+"" 
+"function! CJ()
+"execute 'normal! j' . "\<C-E>"
+"endfunction
+"" 
+"function! CK()
+"execute 'normal! k' . "\<C-y>"
+"endfunction
+
+"" (aagg) Fri Nov  8 12:55:48 GMT 2019
+"nnoremap <C-j> :call CJ()<CR>
+"nnoremap <C-k> :call CK()<CR>
+
+" " In line search - mostly useless
+" nnoremap <C-l> ;
+" nnoremap <C-h> ,
+
+
+
 
 " (aagg) Mon Apr 20 12:45:05 BST 2020
 function! GoGrep_Fun_Puppet(pattern)
@@ -562,10 +646,6 @@ nmap daf daf"_dd"_dd
 " search for highlighted text with *
 vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
 
-" In line search
-nnoremap <C-l> ;
-nnoremap <C-h> ,
-
 " Copy to clipboard
 noremap <leader>y "*y
 
@@ -583,19 +663,6 @@ endfunction
 "nnoremap <C-u> :keepjumps normal Hzz<CR>
 "nnoremap <C-d> :call CD()<CR>
 "nnoremap <C-u> :call CU()<CR>
-" 
-function! CJ()
-execute 'normal! j' . "\<C-E>"
-endfunction
-" 
-function! CK()
-execute 'normal! k' . "\<C-y>"
-endfunction
-
-" (aagg) Fri Nov  8 12:55:48 GMT 2019
-nnoremap <C-j> :call CJ()<CR>
-nnoremap <C-k> :call CK()<CR>
-
 
 " (aagg) Wed Oct 16 15:32:16 BST 2019
 map gf ]]ze
