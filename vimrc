@@ -230,7 +230,7 @@ let g:github_enterprise_urls = ['https://github.palantir.build']
 
 nmap <expr> <C-l> sneak#is_sneaking() ? '<Plug>Sneak_;' : '†'
 " this is needed due to nnoremap ; :
-nnoremap † ; 
+nnoremap † ;
 nmap <expr> <C-h> sneak#is_sneaking() ? '<Plug>Sneak_,' : ','
 
 
