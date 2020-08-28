@@ -1,5 +1,25 @@
 {
   "languageserver": {
+    "terraform": {
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "filetypes": [
+          "terraform",
+          "tf"
+      ],
+      "initializationOptions": {},
+      "settings": {}
+	},
+    "clojure-lsp": {
+      "command": "bash",
+      "args": ["-c", "clojure-lsp"],
+      "filetypes": ["clojure"],
+      "rootPatterns": ["project.clj"],
+      "additionalSchemes": ["jar", "zipfile"],
+      "trace.server": "verbose",
+      "initializationOptions": {
+      }
+    },
     "cquery": {
       "command": "/Users/agrabauskas/bin/cquery/build/release/bin/cquery",
       "args": ["--log-file=/tmp/cq.log"],
@@ -24,9 +44,16 @@
         "usePlaceholders": true,
         "staticcheck": true,
         "watchChangedFiled": true
+      },
+      "analyses": {
+		"fillstruct": true,
+	  },
+      "codelens": {
+        "test": true,
       }
    }
   }, 
+  "codeLens.enable": true,
   "coc.preferences.useQuickfixForLocations": true,
   "list.normalMappings": {
     "<C-c>": "do:exit",

@@ -44,13 +44,14 @@ Plug 'rodjek/vim-puppet' " rip out
 Plug 'vifm/vifm.vim'
 Plug 'jremmen/vim-ripgrep'
 Plug 'justinmk/vim-sneak'
+Plug 'mtdl9/vim-log-highlighting'
 
 call plug#end()
 " {{{ goyo
 let g:goyo_width = 81
 " }}}
 " {{{ command-t
-let g:CommandTMaxFiles=10000
+let g:CommandTMaxFiles=40000
 " }}}
 " coc configuratio {{{
 " if hidden is not set, TextEdit might fail.
@@ -594,6 +595,9 @@ endfunction
 " Moving back and forth between lines of same or lower indentation.
 noremap <silent> <C-k> :call NextIndent(0, 0, 0, 1)<CR>
 noremap <silent> <C-j> :call NextIndent(0, 1, 0, 1)<CR>
+vnoremap <silent> <C-k> <Esc>:call NextIndent(0, 0, 0, 1)<CR>m'gv''
+vnoremap <silent> <C-j> <Esc>:call NextIndent(0, 1, 0, 1)<CR>m'gv''
+
 
 "" 
 "function! CJ()
@@ -788,6 +792,10 @@ nnoremap <silent> ze zz:call ScrollQuarter('down')<CR>" z eye level
 " if your line is wrapped it j,k won't skip the wrapped bit.
 "nnoremap j gj
 "nnoremap k gk
+
+
+nnoremap <Left> zH
+nnoremap <Right> zL
 
 " }}} 
 
