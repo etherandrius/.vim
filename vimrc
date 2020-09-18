@@ -458,7 +458,7 @@ execute 'set listchars+=tab:' . nr2char(187) . nr2char(183)
 " set directory=~/.vim/swp,~/.tmp,~/tmp,/var/tmp,/tmp
 " set writebackup
 " disable swap files. They were literally never usefull for me.
-set nowswapfile
+set noswapfile
 
 " keep a persistent undo file.
 set undofile
