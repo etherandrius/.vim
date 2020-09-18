@@ -48,7 +48,9 @@ Plug 'mtdl9/vim-log-highlighting'
 
 call plug#end()
 " {{{ goyo
-let g:goyo_width = 81
+let g:goyo_width = 120
+let g:goyo_height = '95%'
+let g:goyo_linenr = 1
 " }}}
 " {{{ command-t
 let g:CommandTMaxFiles=40000
@@ -234,6 +236,8 @@ nmap <expr> <C-l> sneak#is_sneaking() ? '<Plug>Sneak_;' : '†'
 nnoremap † ;
 nmap <expr> <C-h> sneak#is_sneaking() ? '<Plug>Sneak_,' : ','
 
+" casing determines by ignorecase and smartcase
+let g:sneak#use_ic_scs = 1
 
 highlight Sneak guifg=#eee8d5 guibg=#d33682 ctermfg=white ctermbg=magenta
 
@@ -448,11 +452,13 @@ execute 'set listchars+=tab:' . nr2char(187) . nr2char(183)
 " (Character 187 is a right double-chevron, and 183 a mid-dot.)
 
 " moves swap files from directory of a file to ~/.vim-tmp
-set backup
-set backupdir=~/.vim/swp,~/.tmp,~/tmp,/var/tmp,/tmp
-set backupskip=/tmp/*,/private/tmp/*
-set directory=~/.vim/swp,~/.tmp,~/tmp,/var/tmp,/tmp
-set writebackup
+" set backup
+" set backupdir=~/.vim/swp,~/.tmp,~/tmp,/var/tmp,/tmp
+" set backupskip=/tmp/*,/private/tmp/*
+" set directory=~/.vim/swp,~/.tmp,~/tmp,/var/tmp,/tmp
+" set writebackup
+" disable swap files. They were literally never usefull for me.
+set nowswapfile
 
 " keep a persistent undo file.
 set undofile

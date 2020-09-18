@@ -43,14 +43,15 @@
       "initializationOptions": {
         "usePlaceholders": true,
         "staticcheck": true,
-        "watchChangedFiled": true
+        "watchChangedFiled": true,
+        "fuzzyMatching": true,
+        "analyses": {
+          "fillstruct": true
+        },
+        "codelens": {
+          "test": true
+        }
       },
-      "analyses": {
-		"fillstruct": true,
-	  },
-      "codelens": {
-        "test": true,
-      }
    }
   }, 
   "codeLens.enable": true,
