@@ -222,7 +222,7 @@ map T <Plug>Sneak_T
 " Source {{{
 source ~/.vim/spell/abbrev.vim
 " }}}
-" Autocmd Rule {{{
+" Commands Rule {{{
 
 " *.txt fiels are filetype human
 augroup filetype
@@ -235,10 +235,52 @@ augroup vimrc-remember-cursor-position
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
 
+" quarter scroll
+function! ScrollQuarter(move)
+    let height=winheight(0)
+
+    if a:move == 'up'
+        let key="\<C-Y>"
+    else
+        let key="\<C-E>"
+    endif
+
+    execute 'normal! ' . height/4 . key
+endfunction
+nnoremap <silent> ze zz:call ScrollQuarter('down')<CR>" z eye level
+
+" (aagg) Mon Oct  7 22:36:49 PDT 2019
+" Change cursor shape between insert and normal mode in iTerm2.app
+if $TERM_PROGRAM =~ "iTerm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
+endif
+
+" easier source, flush
+if has('nvim')
+command! -nargs=0 Source :source ~/.config/nvim/init.vim
+command! -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
+else
+command -nargs=0 Source :source ~/.vimrc
+command -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
+endif
+
 " }}}
 " Remapings {{{
 
 nmap Q <Nop>
+
+
+" (aagg) jumping to functions
+nmap gf ]]<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>Bze
+nmap gF k[[<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>Bze
+
+" to delete a function and everything around it
+nmap daf daf"_dd"_dd
+
+" (aagg) Wed Feb 19 16:45:52 GMT 2020
+nmap <C-n> :cn<CR>
+nmap <C-p> :cp<CR>
 
 " stay in the Visual mode when using shift commands
 xnoremap < <gv
@@ -255,9 +297,6 @@ nnoremap <silent> <leader>d :lclose<bar>b#<bar>bd #<CR>
 " <leader>n next buffer
 nnoremap <silent> <leader>n :bn<CR>  
 nnoremap <silent> <leader>N :bp<CR>  
-" <leader>p previous buffer
-" nnoremap <silent> <leader>p :bp<CR>
-" nnoremap <silent> <leader>P :bn<CR>
 
 "making shift tab work as backwards tab.
 inoremap <S-Tab> <C-d>
@@ -267,11 +306,7 @@ vmap <S-Tab> <
 
 " search for <++> and enter INSERT mode, careful about changing this it's used
 " all over the place.
-" nmap <leader><leader> <Esc>h/<++><CR>:noh<CR>"_c4l
-" nmap <leader><Space> <Esc>h/<++><CR>:noh<CR>"_c4l
 nmap <Space><Space> <Esc>h/<++><CR>:noh<CR>"_c4l
-" imap <leader><Space> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
-" imap <leader><leader> <C-g>u<Esc>h/<++><CR>:noh<CR>"_c4l
 
 " have Y behave analogously to D and C rather than to dd and cc (which is
 " already done by yy):
@@ -289,16 +324,18 @@ nnoremap > :resize +1<CR>
 nnoremap K kJ
 vnoremap K kJ
 
-" move to beginning/end of line.
-" nnoremap B ^
-" nnoremap E $
-
 nnoremap ; :
 vnoremap ; :
 
 " show trailing white space and tabs
-" have <leader>tl ("toggle list") toggle list on/off and report the change:
 nmap <F2> :set invlist list?<CR>
+
+" Copy to clipboard
+noremap <leader>y "*y
+
+" search for highlighted text with *
+vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
+
 " }}}
 " Set {{{
 
@@ -517,30 +554,6 @@ noremap <silent> <C-j> :call NextIndent(0, 1, 0, 1)<CR>
 vnoremap <silent> <C-k> <Esc>:call NextIndent(0, 0, 0, 1)<CR>m'gv''
 vnoremap <silent> <C-j> <Esc>:call NextIndent(0, 1, 0, 1)<CR>m'gv''
 
-" (aagg) Wed Feb 19 16:45:52 GMT 2020
-nmap <C-n> :cn<CR>
-nmap <C-p> :cp<CR>
-
-" to delete a function and everything around it
-nmap daf daf"_dd"_dd
-
-" search for highlighted text with *
-vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
-
-" Copy to clipboard
-noremap <leader>y "*y
-
-" (aagg) Wed Oct 16 15:32:16 BST 2019
-nmap gf ]]<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>Bze
-nmap gF k[[<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>Bze
-
-" (aagg) Mon Oct  7 22:36:49 PDT 2019
-" Change cursor shape between insert and normal mode in iTerm2.app
-if $TERM_PROGRAM =~ "iTerm"
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
-endif
-
 nnoremap <C-w>n :bn<CR>
 nnoremap <C-w>p :bp<CR>
 nnoremap <C-w><C-c> <Nop>
@@ -555,31 +568,5 @@ nnoremap <leader>j <C-w>j
 nnoremap <leader>J <C-w>J
 nnoremap <leader>h <C-w>h
 nnoremap <leader>H <C-w>H
-
-" easier source, flush
-if has('nvim')
-command! -nargs=0 Source :source ~/.config/nvim/init.vim
-command! -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
-else
-command -nargs=0 Source :source ~/.vimrc
-command -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
-endif
-
-
-" quarter scroll
-function! ScrollQuarter(move)
-    let height=winheight(0)
-
-    if a:move == 'up'
-        let key="\<C-Y>"
-    else
-        let key="\<C-E>"
-    endif
-
-    execute 'normal! ' . height/4 . key
-endfunction
-
-nnoremap <silent> ze zz:call ScrollQuarter('down')<CR>" z eye level
 " }}} 
-
 " vim: set foldmethod=marker: set foldlevel=0
