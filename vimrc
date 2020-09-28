@@ -42,6 +42,7 @@ Plug 'mtdl9/vim-log-highlighting' " syntax for log files
 Plug 'kshenoy/vim-signature' " shows marks
 Plug 'scrooloose/nerdtree' " need to learn this properly or change to vifm
 Plug 'osyo-manga/vim-brightest' " highlights current word in red
+Plug 'rodjek/vim-puppet' " puppet syntax
 
 " text objects
 Plug 'michaeljsmith/vim-indent-object'
@@ -188,8 +189,8 @@ nmap <leader>t :Files<CR>
 nmap <leader>T :GFiles<CR>
 
 function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case  --glob "!changelog" --glob "!vendor" -- %s || true'
-  " let initial_command = printf(command_fmt, shellescape(a:query))
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob "!changelog" --glob "!vendor" -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
