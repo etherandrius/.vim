@@ -17,10 +17,6 @@ else
   colorscheme solarized
 endif
 
-if &diff 
-	set wrap
-endif
-
 let mapleader="\<Space>"
 
 " Vim-Plug {{{
@@ -184,11 +180,24 @@ nnoremap \tf :NERDTreeFind<cr>   " tree find
 nnoremap \tg :NERDTreeFocus<cr>  " tree go 
 " }}}
 " {{{ fzf
-let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --glob "!.git/*"'
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --glob "!.git/*" --glob "!changelog" --glob "!vendor"'
 let $FZF_PREVIEW_COMMAND = 'highlight -O ansi -l {} || cat {}'
 
 nmap <leader>b :BLines<CR>
 nmap <leader>t :Files<CR>
+nmap <leader>T :GFiles<CR>
+
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case  --glob "!changelog" --glob "!vendor" -- %s || true'
+  " let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+nmap <leader>rg :RG!<CR>
+
 " }}}
 " {{{ vim-fugitive rhubarb
 
@@ -339,6 +348,10 @@ vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
 " }}}
 " Set {{{
 
+if &diff 
+	set wrap
+endif
+
 " enables scrolling with mouse in iTerm2, a stands for all modes, use n if want normal mode scrolling only
 set mouse=a
 
@@ -353,7 +366,7 @@ set textwidth=120
 " adjusting format options to my liking
 " :help fo-table for letter meanings.
 set formatoptions=crqlt
-set formatoptions-=o
+set formatoptions-=o 
 
 if has('gui')
 set guifont=InputMono:h13
@@ -570,3 +583,4 @@ nnoremap <leader>h <C-w>h
 nnoremap <leader>H <C-w>H
 " }}} 
 " vim: set foldmethod=marker: set foldlevel=0
+
