@@ -246,18 +246,12 @@ augroup vimrc-remember-cursor-position
 augroup END
 
 " quarter scroll
-function! ScrollQuarter(move)
+function! ScrollQ()
     let height=winheight(0)
-
-    if a:move == 'up'
-        let key="\<C-Y>"
-    else
-        let key="\<C-E>"
-    endif
-
-    execute 'normal! ' . height/4 . key
+    execute 'normal! ' . height/4 . "\<C-E>"
 endfunction
-nnoremap <silent> ze zz:call ScrollQuarter('down')<CR>" z eye level
+nnoremap <silent> ze zz:call ScrollQ()<CR>" z eye level
+vnoremap <silent> ze <C-c>zz:call ScrollQ()<CR>gv
 
 " (aagg) Mon Oct  7 22:36:49 PDT 2019
 " Change cursor shape between insert and normal mode in iTerm2.app
