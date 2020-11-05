@@ -43,6 +43,7 @@ Plug 'kshenoy/vim-signature' " shows marks
 Plug 'scrooloose/nerdtree' " need to learn this properly or change to vifm
 Plug 'osyo-manga/vim-brightest' " highlights current word in red
 Plug 'rodjek/vim-puppet' " puppet syntax
+Plug 'vim-scripts/MultipleSearch' " Highlight multiple words at the same time
 
 " text objects
 Plug 'michaeljsmith/vim-indent-object'
@@ -169,8 +170,9 @@ let g:go_highlight_build_constraints = 1
 let g:go_highlight_generate_tags = 1
 " }}}
 " {{{ MultipleSearch
-let g:MultipleSearchColorSequence = "yellow,cyan,magenta,green,blue,gray,brown,red"
-let g:MultipleSearchTextColorSequence = "black,black,black,black,white,white,white,white"
+16 16 16 1616
+let g:MultipleSearchColorSequence = "16,229,192,231,225,157,223,195"
+let g:MultipleSearchTextColorSequence = "white,black,black,black,black,black,black,black"
 let g:MultipleSearchMaxColors = 8
 command! -nargs=0 Noh :noh | :SearchReset
 " }}}
@@ -263,11 +265,11 @@ endif
 " easier source, flush
 if has('nvim')
 command! -nargs=0 Source :source ~/.config/nvim/init.vim
-command! -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
 else
 command -nargs=0 Source :source ~/.vimrc
-command -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
 endif
+" command! -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
+command! -nargs=0 Flush :NERDTreeRefreshRoot
 
 " }}}
 " Remapings {{{
