@@ -23,7 +23,7 @@ let mapleader="\<Space>"
 call plug#begin()
 
 " coding
-Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
 
 " qol
@@ -35,7 +35,7 @@ Plug 'djoshea/vim-autoread' " auto-reads changes to files
 Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'justinmk/vim-sneak'
+Plug 'justinmk/vim-sneak' " meh
 
 " visual
 Plug 'mtdl9/vim-log-highlighting' " syntax for log files
@@ -147,8 +147,9 @@ let g:go_doc_keywordprg_enabled = 0
 " 
 let g:go_addtags_transform = 'camelcase'
 
-" override the default goFunctionCall color.
+" override the default goFunctionCall color, cuz it's uggo
 hi def link goFunctionCall Function
+let g:go_highlight_functions = 1
 
 "
 let g:go_fmt_fail_silently = 1
@@ -157,9 +158,6 @@ let g:go_doc_popup_window = 1
 let g:go_list_type_commands = {"GoImplements": "quickfix"}
 
 nmap <silent> gI :GoImplements<CR>
-
-" 
-let g:go_highlight_functions = 1
 
 let g:go_highlight_extra_types = 0
 let g:go_highlight_function_parameters = 1
@@ -170,7 +168,13 @@ let g:go_highlight_build_constraints = 1
 let g:go_highlight_generate_tags = 1
 " }}}
 " {{{ MultipleSearch
-16 16 16 1616
+" one liner for all the colours
+" for i in {0..255} ; do                                                                                                                                                             MacPalantir ✭ ✱ ◼
+    " printf "\x1b[48;5;%sm%3d\e[0m " "$i" "$i"
+    " if (( i == 15 )) || (( i > 15 )) && (( (i-15) % 6 == 0 )); then
+    "     printf "\n";
+    " fi
+" done
 let g:MultipleSearchColorSequence = "16,229,192,231,225,157,223,195"
 let g:MultipleSearchTextColorSequence = "white,black,black,black,black,black,black,black"
 let g:MultipleSearchMaxColors = 8
@@ -203,9 +207,7 @@ nmap <leader>rg :RG!<CR>
 
 " }}}
 " {{{ vim-fugitive rhubarb
-
 let g:github_enterprise_urls = ['https://github.palantir.build']
-
 " }}}
 " {{{ vim-sneak
 
