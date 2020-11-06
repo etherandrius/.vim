@@ -169,15 +169,15 @@ let g:go_highlight_generate_tags = 1
 " }}}
 " {{{ MultipleSearch
 " one liner for all the colours
-" for i in {0..255} ; do                                                                                                                                                             MacPalantir ✭ ✱ ◼
-    " printf "\x1b[48;5;%sm%3d\e[0m " "$i" "$i"
-    " if (( i == 15 )) || (( i > 15 )) && (( (i-15) % 6 == 0 )); then
-    "     printf "\n";
-    " fi
+" for i in {0..255} ; do
+"     printf "\x1b[48;5;%sm%3d\e[0m " "$i" "$i"
+"     if (( i == 15 )) || (( i > 15 )) && (( (i-15) % 6 == 0 )); then
+"         printf "\n";
+"     fi
 " done
-let g:MultipleSearchColorSequence = "16,229,192,231,225,157,223,195"
-let g:MultipleSearchTextColorSequence = "white,black,black,black,black,black,black,black"
-let g:MultipleSearchMaxColors = 8
+let g:MultipleSearchColorSequence = "229,192,231,225,157,223,195"
+let g:MultipleSearchTextColorSequence = "black,black,black,black,black,black,black"
+let g:MultipleSearchMaxColors = 7
 command! -nargs=0 Noh :noh | :SearchReset
 " }}}
 " {{{ NERDtree
