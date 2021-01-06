@@ -35,7 +35,6 @@ Plug 'djoshea/vim-autoread' " auto-reads changes to files
 Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'justinmk/vim-sneak' " meh
 
 " visual
 Plug 'mtdl9/vim-log-highlighting' " syntax for log files
@@ -202,29 +201,22 @@ function! RipgrepFzf(query, fullscreen)
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
+function! RipgrepFzfNoTest(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob "!changelog" --glob "!vendor" --glob "!*_test.go" -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 nmap <leader>rg :RG!<CR>
+
+command! -nargs=* -bang RGnotest call RipgrepFzfNoTest(<q-args>, <bang>0)
 
 " }}}
 " {{{ vim-fugitive rhubarb
 let g:github_enterprise_urls = ['https://github.palantir.build']
-" }}}
-" {{{ vim-sneak
-
-nmap <expr> <C-l> sneak#is_sneaking() ? '<Plug>Sneak_;' : '†'
-" this is needed due to nnoremap ; :
-nnoremap † ; 
-nmap <expr> <C-h> sneak#is_sneaking() ? '<Plug>Sneak_,' : ','
-
-highlight Sneak guifg=#eee8d5 guibg=#d33682 ctermfg=white ctermbg=red
-
-" casing determines by ignorecase and smartcase
-let g:sneak#use_ic_scs = 1
-let g:sneak#s_next=1
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
 " }}}
 
 " {{{ netrw
@@ -289,6 +281,9 @@ nmap daf daf"_dd"_dd
 " (aagg) Wed Feb 19 16:45:52 GMT 2020
 nmap <C-n> :cn<CR>
 nmap <C-p> :cp<CR>
+" (aagg) Wed 16 Dec 2020 15:11:24 GMT
+nmap <C-N> :cn<CR>zz
+nmap <C-P> :cp<CR>zz
 
 " stay in the Visual mode when using shift commands
 xnoremap < <gv
