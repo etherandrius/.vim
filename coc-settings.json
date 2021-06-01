@@ -20,13 +20,18 @@
       "initializationOptions": {
       }
     },
-    "cquery": {
-      "command": "/Users/agrabauskas/bin/cquery/build/release/bin/cquery",
-      "args": ["--log-file=/tmp/cq.log"],
-      "filetypes": ["c", "cpp"],
-      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".git/", ".hg/"],
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+      "rootPatterns": [".ccls-root", "compile_commands.json"],
+      "disableDiagnostics": true,
       "initializationOptions": {
-        "cacheDirectory": "/tmp/cquery"
+        "cache": {
+          "directory": ".ccls-cache"
+        },
+        "client": {
+          "snippetSupport": true,
+        }
       }
     },
     "puppet": {
@@ -40,6 +45,9 @@
       "command": "gopls",
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
       "filetypes": ["go"],
+      "env": {
+          "GOFLAGS": "-tags=linux",
+      },
       "initializationOptions": {
         "usePlaceholders": true,
         "staticcheck": true,
@@ -48,10 +56,10 @@
         "analyses": {
           "fillstruct": true
         },
-        "codelens": {
+        "codelenses": {
           "test": true
         }
-      },
+      }
    }
   }, 
   "codeLens.enable": true,

@@ -272,8 +272,8 @@ nmap Q <Nop>
 
 
 " (aagg) jumping to functions
-nmap gf ]]<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>Bze
-nmap gF k[[<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>Bze
+nmap gf ]]<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>B
+nmap gF k[[<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>B
 
 " to delete a function and everything around it
 nmap daf daf"_dd"_dd
@@ -297,9 +297,14 @@ vnoremap <C-c> <Esc><Esc>
 "insert a line below with out entering INSERT mode.  nnoremap <C-o> o<Esc> 
 " <leader>d deletes current buffer and keeps the split
 nnoremap <silent> <leader>d :lclose<bar>b#<bar>bd #<CR>
-" <leader>n next buffer
-nnoremap <silent> <leader>n :bn<CR>  
-nnoremap <silent> <leader>N :bp<CR>  
+
+" <leader>n next tab
+nnoremap <silent> <leader>n :tabn<CR>  
+nnoremap <silent> <leader>N :tabp<CR>  
+
+" " <leader>n next buffer
+" nnoremap <silent> <leader>n :bn<CR>  
+" nnoremap <silent> <leader>N :bp<CR>  
 
 "making shift tab work as backwards tab.
 inoremap <S-Tab> <C-d>
@@ -366,9 +371,14 @@ if has('gui')
 set guifont=InputMono:h13
 endif
 
+if has('gui')
+set belloff=all
+endif
+
 set foldenable
 
 set number 
+set relativenumber
 
 " make searches case-insensitive, unless they contain upper-case letters:
 set ignorecase
@@ -494,6 +504,10 @@ hi MatchParen gui=bold guibg=#eee8d5 guifg=#dc322f
 set modeline
 " }}} 
 " Test {{{
+
+" (aagg) Fri 14 May 2021 00:42:12 BST
+" capital P paste from buffer when in visual mode
+vnoremap P "0p
 
 inoremap jj <esc>
 
