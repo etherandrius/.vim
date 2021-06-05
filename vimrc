@@ -25,6 +25,7 @@ call plug#begin()
 " coding
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
+Plug 'liuchengxu/vista.vim' "  LSP tag viewer and finder
 
 " qol
 Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
@@ -125,8 +126,8 @@ nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
 nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Outline of the document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Outline of the document - deprecated by vista
+" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
 " nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
@@ -135,8 +136,32 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " auto-organize imports
 " gives error *[coc.nvim] Orgnize import action not found.* including misspeled Orgnize
 " autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+"
+let g:coc_global_extensions = [
+\ 'coc-yaml',
+\ 'coc-java',
+\ ]
+
+
 
 " }}} 
+" {{{ Vista
+
+" source ~/.vim/plugged/vista.vim/autoload/vista/executive/coc.vim
+
+" Executive used when opening vista sidebar without specifying it.
+" See all the avaliable executives via `:echo g:vista#executives`.
+let g:vista_default_executive = 'coc'
+
+let g:vista_blink = [0, 0]
+let g:vista_top_level_blink = [0, 0]
+let g:vista_keep_fzf_colors = 0
+let g:vista#renderer#enable_icon = 0
+let g:vista_disable_statusline = 1
+
+nnoremap <silent> <space>o  :<C-u>Vista finder coc<cr>
+
+" }}}
 " vim-go configuration {{{
 
 " disable vim-go :GoDef short cut (gd)
