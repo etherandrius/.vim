@@ -3,3 +3,6 @@
 let g:limelight_bop='\(\_^func .*(\(\n\?.*\(,\|)\)\)*.*{\|\_^type .* struct {\|\_^import (\|\_^const (\)' " function, type, import or const.
 " ^func .*(\(\n\?.*\(,\|)\)\)*.*{
 let g:limelight_eop='\(\_^}\|\_^)\)$' " } or )
+
+
+nmap <silent> gI :GoImplements<CR>

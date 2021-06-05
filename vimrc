@@ -156,8 +156,6 @@ let g:go_fmt_autosave = 0
 let g:go_doc_popup_window = 1 
 let g:go_list_type_commands = {"GoImplements": "quickfix"}
 
-nmap <silent> gI :GoImplements<CR>
-
 let g:go_highlight_extra_types = 0
 let g:go_highlight_function_parameters = 1
 let g:go_highlight_fields = 1
