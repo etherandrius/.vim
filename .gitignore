@@ -3,4 +3,5 @@ swp/*
 spell/en.utf-8.add
 spell/en.utf-8.add.spl
 .netrwhist
+sessions/*
 view/*
