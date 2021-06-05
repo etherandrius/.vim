@@ -19,8 +19,44 @@ endif
 
 let mapleader="\<Space>"
 
+" Statusline {{{
+
+function! Zoom()
+  let zoomed = zoom#statusline()
+  if (zoomed == '')
+    return ''
+  endif
+  return '[' . zoomed . '] '
+endfunction
+
+
+" vim status line settings
+set laststatus=2
+set statusline=""
+set statusline+=\ %m " is modified
+set statusline+=%k " is modified
+set statusline+=%y " Syntax
+set statusline+=\ %1*[%t]%*\ 
+set statusline+=%{Zoom()}
+
+"set statusline+=(%<%{pathshorten(expand('%:h'))})
+set statusline+=(%<%{expand('%:h')})\ 
+set statusline+=%{StatusDiagnostic()}
+
+set statusline+=%= " align to right
+set statusline+=%r " is read only 
+set statusline+=%q " quickfix list
+set statusline+=%h " is help file
+set statusline+=%w " is preview
+" set statusline+=[%p%%]\ " percentage how much in file you are along
+set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
+
+" }}}
 " Vim-Plug {{{
 call plug#begin()
+
+" testing
+Plug 'dhruvasagar/vim-zoom' " <C-w>m
 
 " coding
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax
@@ -40,12 +76,11 @@ Plug 'junegunn/fzf.vim'
 " visual
 Plug 'mtdl9/vim-log-highlighting' " syntax for log files
 Plug 'kshenoy/vim-signature' " shows marks
-Plug 'scrooloose/nerdtree' " need to learn this properly or change to vifm
+Plug 'scrooloose/nerdtree' " 
 Plug 'osyo-manga/vim-brightest' " highlights current word in red
 Plug 'rodjek/vim-puppet' " puppet syntax
 Plug 'vim-scripts/MultipleSearch' " Highlight multiple words at the same time
 Plug 'etherandrius/java-syntax.vim' " syntax highlight for java
-
 
 " text objects
 Plug 'michaeljsmith/vim-indent-object'
@@ -499,25 +534,6 @@ endfunction
 " vim title settings - kinda funky care 
 set titlestring=""
 set titlestring+=%{GetTitleString()}\ -\ [%t]\ %M\ -\ VIM
-
-" vim status line settings
-set laststatus=2
-set statusline=""
-set statusline+=\ %m " is modified
-set statusline+=%k " is modified
-set statusline+=%y " Syntax
-set statusline+=\ %1*[%t]%*\ 
-
-"set statusline+=(%<%{pathshorten(expand('%:h'))})
-set statusline+=(%<%{expand('%:h')})\ 
-set statusline+=%{StatusDiagnostic()}
-set statusline+=%= " align to right
-set statusline+=%r " is read only 
-set statusline+=%q " quickfix list
-set statusline+=%h " is help file
-set statusline+=%w " is preview
-" set statusline+=[%p%%]\ " percentage how much in file you are along
-set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
 
 "hi User1 cterm=bold ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83 gui=bold
 hi User1 ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83
