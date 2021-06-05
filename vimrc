@@ -533,7 +533,10 @@ set modeline
 " (aagg) Fri 14 May 2021 00:42:12 BST
 " capital P paste from buffer when in visual mode
 vnoremap P "0p
+nnoremap <silent> <space>p "0p
+vnoremap <silent> <space>p "0p
 
+" this does not seem to stick
 inoremap jj <esc>
 
 " Trying this out in order to use H, L, M more
