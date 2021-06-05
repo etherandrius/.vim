@@ -73,6 +73,7 @@
     "<C-c>": "do:exit",
     "<C-n>": "do:next",
     "<C-p>": "do:previous"
-  }
+  },
+  "npm.binPath": "npm --registry https://registry.npmjs.org"
 }
 
