@@ -44,7 +44,7 @@ Plug 'scrooloose/nerdtree' " need to learn this properly or change to vifm
 Plug 'osyo-manga/vim-brightest' " highlights current word in red
 Plug 'rodjek/vim-puppet' " puppet syntax
 Plug 'vim-scripts/MultipleSearch' " Highlight multiple words at the same time
-Plug 'uiiaoo/java-syntax.vim' " syntax highlight for java
+Plug 'etherandrius/java-syntax.vim' " syntax highlight for java
 
 
 " text objects
