@@ -21,12 +21,20 @@ let mapleader="\<Space>"
 
 " Statusline {{{
 
-function! Zoom()
+function! StatusZoom()
   let zoomed = zoom#statusline()
   if (zoomed == '')
     return ''
   endif
-  return '[' . zoomed . '] '
+  return ' [' . zoomed . ']'
+endfunction
+
+function! StatusFugitive()
+  let branch = FugitiveStatusline()
+  if (branch == '')
+    return ''
+  endif
+  return ' [' . branch[5:-3] . ']'
 endfunction
 
 
@@ -36,12 +44,13 @@ set statusline=""
 set statusline+=\ %m " is modified
 set statusline+=%k " is modified
 set statusline+=%y " Syntax
-set statusline+=\ %1*[%t]%*\ 
-set statusline+=%{Zoom()}
+set statusline+=\ %1*[%t]%*
+set statusline+=%{StatusFugitive()}
+set statusline+=%{StatusZoom()}
 
 "set statusline+=(%<%{pathshorten(expand('%:h'))})
-set statusline+=(%<%{expand('%:h')})\ 
-set statusline+=%{StatusDiagnostic()}
+set statusline+=\ (%<%{expand('%:h')}) " Path to file relative to PWD
+set statusline+=\ %{StatusDiagnostic()}
 
 set statusline+=%= " align to right
 set statusline+=%r " is read only 
@@ -119,9 +128,9 @@ endfunction
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <enter> to confirm completion
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
 " Use <TAB> to confirm completion
-inoremap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
+" inoremap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
