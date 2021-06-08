@@ -95,6 +95,8 @@ Plug 'etherandrius/java-syntax.vim' " syntax highlight for java
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'wellle/targets.vim' " arguments objects - try finding an alternative
 Plug 'tpope/vim-commentary' " essential
+Plug 'kana/vim-textobj-user' " Needed for vim-textobj-function
+Plug 'kana/vim-textobj-function' " supposed to gve function text object for java + others
 
 call plug#end()
 
@@ -344,9 +346,6 @@ nmap Q <Nop>
 " (aagg) jumping to functions
 nmap gf ]]<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>B
 nmap gF k[[<ESC>V/\%V[a-zA-Z](<CR><ESC>:noh<CR>B
-
-" to delete a function and everything around it
-nmap daf daf"_dd"_dd
 
 " (aagg) Wed Feb 19 16:45:52 GMT 2020
 nmap <C-n> :cn<CR>
