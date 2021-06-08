@@ -1,34 +1,7 @@
-" print 
-nnoremap <silent> <leader>print oSystem.out.println(<++>);<Esc>FS
-" inoremap <silent><leader>print System.out.println(<++>);<Esc>FS
-
-" for loops
-nnoremap <silent> <leader>for ofor(<++>;<++>;<++>){<CR><++><CR>}<CR><Esc>kkk
-nnoremap <silent> <leader>ifor ofor(int i=0; i<<++>;i++) {<CR><++><CR>}<CR><Esc>kkk
-
-" if
-nnoremap <silent> <leader>if oif(<++>){<CR><++><CR>}<Esc>kk
-
-nnoremap <silent> <leader>else oif(<++>){<CR><++><CR>} else {<Cr><++><Cr>}<Esc>kkkk
-
-nnoremap <silent> <leader>tri a<++>? <++>: <++>;<Esc>3F<
-" inoremap <silent> <leader>tri <++>? <++>: <++>;<Esc>3F<
-
-" main
-noremap <silent> <leader>main opublic static void main(String[] args){<CR><++><CR>}<Esc>kk
-
-" class
-nnoremap <silent> <leader>class opublic class <C-R>=expand("%:t:r")<CR> {<CR>}<Esc>k
-
-" the only way in java
+" the only way
 set foldmethod=syntax
 set foldlevel=99
 set foldnestmax=2
-
-" Fold import statements
-" syn clear javaInclude
-syn region foldImports start=/\(^\s*\n^import\)\@<= .\+;/ end=+^\s*$+ transparent fold keepend contains=javaInclude
-" syn match  javaInclude       '\v<import%(\_s+static)=>' skipwhite skipempty nextgroup=javaPackagePath
 
 " entire method
 syn region javaMethod start="^\z(\s*\)\(public\|private\|protected\)\(\_[^;]\)*{\s*$" end="^\z1}\s*$" transparent fold keepend
@@ -54,17 +27,22 @@ hi Folded ctermbg=white
 set fillchars=fold:\ 
 
 "
-nmap gf <ESC>jV}}}}/\%V\(public\\|private\\|protected\)<CR><ESC>:noh<CR>
-nmap gF <ESC>kV{{{{?\%V\(public\\|private\\|protected\)<CR><ESC>:noh<CR>
-
-
-"
 set shiftwidth=4
 set tabstop=4
 
-
 " Fmt
 command! -nargs=0 Fmt :silent exec "!./gradlew format"
+
+
+" TEST {{{
+
+" Fold import statements
+" doesn't work
+" syn clear javaInclude
+syn region foldImports start=/\(^\s*\n^import\)\@<= .\+;/ end=+^\s*$+ transparent fold keepend contains=javaInclude
+" syn match  javaInclude       '\v<import%(\_s+static)=>' skipwhite skipempty nextgroup=javaPackagePath
+
+
 
 " colours
 hi Include ctermfg=2
@@ -79,3 +57,5 @@ hi JavaIdentifier ctermfg=none
 hi JavaAccessKeyword ctermfg=2
 " hi JavaFunctionCall ctermfg=none cterm=italic
 
+" }}}
+" vim: set foldmethod=marker: set foldlevel=0

@@ -261,6 +261,7 @@ let $FZF_PREVIEW_COMMAND = 'highlight -O ansi -l {} || cat {}'
 nmap <leader>b :BLines<CR>
 nmap <leader>t :Files<CR>
 nmap <leader>T :GFiles<CR>
+nmap <leader>rh :History<CR>
 
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob "!changelog" --glob "!vendor" -- %s || true'
@@ -412,6 +413,19 @@ noremap <leader>y "*y
 
 " search for highlighted text with *
 vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
+
+nnoremap <C-w><C-c> <Nop>
+nnoremap <C-w>c <Nop>
+nnoremap <C-w>C <Nop>
+
+nnoremap <leader>l <C-w>l
+nnoremap <leader>L <C-w>L
+nnoremap <leader>k <C-w>k
+nnoremap <leader>K <C-w>K
+nnoremap <leader>j <C-w>j
+nnoremap <leader>J <C-w>J
+nnoremap <leader>h <C-w>h
+nnoremap <leader>H <C-w>H
 
 " }}}
 " Set {{{
@@ -628,20 +642,6 @@ noremap <silent> <C-j> :call NextIndent(0, 1, 0, 1)<CR>
 vnoremap <silent> <C-k> <Esc>:call NextIndent(0, 0, 0, 1)<CR>m'gv''
 vnoremap <silent> <C-j> <Esc>:call NextIndent(0, 1, 0, 1)<CR>m'gv''
 
-nnoremap <C-w>n :bn<CR>
-nnoremap <C-w>p :bp<CR>
-nnoremap <C-w><C-c> <Nop>
-nnoremap <C-w>c <Nop>
-nnoremap <C-w>C <Nop>
-
-nnoremap <leader>l <C-w>l
-nnoremap <leader>L <C-w>L
-nnoremap <leader>k <C-w>k
-nnoremap <leader>K <C-w>K
-nnoremap <leader>j <C-w>j
-nnoremap <leader>J <C-w>J
-nnoremap <leader>h <C-w>h
-nnoremap <leader>H <C-w>H
 " }}} 
 " vim: set foldmethod=marker: set foldlevel=0
 
