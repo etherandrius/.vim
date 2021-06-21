@@ -5,14 +5,16 @@ endif
 
 set nocompatible
 
-set background=light
-set t_Co=256
-syntax on
-if has("gui_running")
-  let g:solarized_termcolors=256
-  colorscheme solarized
-  highlight Comment cterm=italic gui=italic
+if strftime("%H") < 5 || strftime("%H") > 23
+  set background=dark
 else
+  set background=light
+endif
+syntax on
+if has("gui_running") || exists('g:neovide')
+    colorscheme solarized
+else
+  set t_Co=256
   let g:solarized_termcolors=16
   colorscheme solarized
 endif
@@ -26,7 +28,7 @@ function! StatusZoom()
   if (zoomed == '')
     return ''
   endif
-  return ' [' . zoomed . ']'
+  return '[' . zoomed . ']'
 endfunction
 
 function! StatusFugitive()
@@ -37,6 +39,24 @@ function! StatusFugitive()
   return ' [' . branch[5:-3] . ']'
 endfunction
 
+function! StatusGeneratedFile()
+    let path = expand('%:h')
+    if path =~ 'generated'
+        return '[G]'
+    endif
+    return ''
+endfunction
+
+function! StatusJavaPath()
+    let path = expand('%:h')
+    if path =~ 'java/com/palantir/'
+        let path = substitute(path, "java/com/palantir/", "", "")
+    endif
+    if path =~ '/generated/'
+        let path = substitute(path, "/generated/", "/G/", "")
+    endif
+    return path
+endfunction
 
 " vim status line settings
 set laststatus=2
@@ -45,27 +65,28 @@ set statusline+=\ %m " is modified
 set statusline+=%k " is modified
 set statusline+=%y " Syntax
 set statusline+=\ %1*[%t]%*
-set statusline+=%{StatusFugitive()}
+" set statusline+=%{StatusFugitive()}
+set statusline+=%1*%{StatusGeneratedFile()}%*
+set statusline+=%1*%r%* " is read only 
 set statusline+=%{StatusZoom()}
 
 "set statusline+=(%<%{pathshorten(expand('%:h'))})
-set statusline+=\ (%<%{expand('%:h')}) " Path to file relative to PWD
+" set statusline+=\ (%<%{expand('%:h')}) " Path to file relative to PWD
+set statusline+=\ (%<%{StatusJavaPath()}) " Path to file relative to PWD
 set statusline+=\ %{StatusDiagnostic()}
 
 set statusline+=%= " align to right
-set statusline+=%r " is read only 
-set statusline+=%q " quickfix list
-set statusline+=%h " is help file
-set statusline+=%w " is preview
-" set statusline+=[%p%%]\ " percentage how much in file you are along
-set statusline+=%l/%L,%3v\ \ \  " current line / total lines, column number
+" set statusline+=\ %l/%L,%3v\ \ \  " current line / total lines, column number
+set statusline+=\ %L,%3v\ \ \  " total lines, column number
 
 " }}}
 " Vim-Plug {{{
+" Plugins {{{
 call plug#begin()
 
 " testing
 Plug 'dhruvasagar/vim-zoom' " <C-w>m
+Plug 'etherandrius/limelight.vim' " Fork of limelight with movement support
 
 " coding
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax
@@ -100,6 +121,7 @@ Plug 'kana/vim-textobj-function' " supposed to gve function text object for java
 
 call plug#end()
 
+" }}} 
 " coc configuratio {{{
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -205,6 +227,9 @@ let g:vista_keep_fzf_colors = 0
 let g:vista#renderer#enable_icon = 0
 let g:vista_disable_statusline = 1
 
+" let g:vista_fzf_preview = ['up:50%']
+" let g:vista_fzf_opt = ['--keep-right']
+
 nnoremap <silent> <space>o  :<C-u>Vista finder coc<cr>
 
 " }}}
@@ -245,9 +270,14 @@ let g:go_highlight_generate_tags = 1
 "         printf "\n";
 "     fi
 " done
-let g:MultipleSearchColorSequence = "229,192,231,225,157,223,195"
+
 let g:MultipleSearchTextColorSequence = "black,black,black,black,black,black,black"
 let g:MultipleSearchMaxColors = 7
+if exists('g:neovide')
+    let g:MultipleSearchColorSequence = "#ffffaf,#d7ff87,#ffffff,#ffd7ff,#afffaf,#ffd7af,#d7ffff"
+else
+    let g:MultipleSearchColorSequence = "229,192,231,225,157,223,195"
+endif
 command! -nargs=0 Noh :noh | :SearchReset
 " }}}
 " {{{ NERDtree
@@ -258,18 +288,23 @@ nnoremap \tg :NERDTreeFocus<cr>  " tree go
 " }}}
 " {{{ fzf
 let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --glob "!.git/*" --glob "!changelog" --glob "!vendor"'
-let $FZF_PREVIEW_COMMAND = 'highlight -O ansi -l {} || cat {}'
+if exists('g:neovide')
+    " let $FZF_PREVIEW_COMMAND = 'highlight -O ansi --style=solarized-light -l {} || cat {}'
+else   
+    let $FZF_PREVIEW_COMMAND = 'highlight -O ansi -l {} || cat {}'
+endif
 
 nmap <leader>b :BLines<CR>
 nmap <leader>t :Files<CR>
 nmap <leader>T :GFiles<CR>
 nmap <leader>rh :History<CR>
+nmap <leader>rb :Buffers<CR>
 
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob "!changelog" --glob "!vendor" -- %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  let spec = {'options': ['--keep-right', '--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
@@ -277,7 +312,7 @@ function! RipgrepFzfNoTest(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob "!changelog" --glob "!vendor" --glob "!*_test.go" -- %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  let spec = {'options': ['--keep-right', '--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
@@ -286,9 +321,44 @@ nmap <leader>rg :RG!<CR>
 
 command! -nargs=* -bang RGnotest call RipgrepFzfNoTest(<q-args>, <bang>0)
 
+" " https://github.com/junegunn/fzf.vim/issues/184
+" command! -nargs=* -bang RMarks call fzf#vim#marks({'options': ['--preview', 'cat -n {-1}']})
+" " command! -nargs=* -bang RMarks call fzf#vim#marks({'options': ['--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]']})
+" nmap <leader>rm :RMarks<CR>
+
+function! s:fzf_preview_p(bang, ...) abort
+    let preview_args = get(g:, 'fzf_preview_window', ['up:50%', 'ctrl-/'])
+    if empty(preview_args)
+        return { 'options': ['--preview-window', 'hidden'] }
+    endif
+
+    " For backward-compatiblity
+    if type(preview_args) == type('')
+        let preview_args = [preview_args]
+    endif
+    return call('fzf#vim#with_preview', extend(copy(a:000), preview_args))
+endfunction
+
+  command! -bar -bang MP
+        \ call fzf#vim#marks(
+        \     s:fzf_preview_p(<bang>0, {'placeholder': '$([ -r $(echo {4} | sed "s#^~#$HOME#") ] && echo {4} || echo ' . fzf#shellescape(expand('%')) . '):{2}',
+        \               'options': '--preview-window +{2}-/2'}),
+        \     <bang>0)
+nmap <leader>rm :MP<CR>
+
 " }}}
 " {{{ vim-fugitive rhubarb
 let g:github_enterprise_urls = ['https://github.palantir.build']
+" }}}
+" {{{ limelight 
+
+if &background == "light"
+    let g:limelight_conceal_ctermfg = '11'
+else
+    let g:limelight_conceal_ctermfg = '12'
+endif
+
+
 " }}}
 
 " {{{ netrw
@@ -567,6 +637,14 @@ hi MatchParen gui=bold guibg=#eee8d5 guifg=#dc322f
 set modeline
 " }}} 
 " Test {{{
+
+
+if exists('g:neovide')
+    nnoremap <D-v> "+p
+    vnoremap <D-v> "+p
+    inoremap <D-v> <C-R><C-O>+
+    cnoremap <D-v> <C-R><C-O>+
+endif
 
 " (aagg) Fri 14 May 2021 00:42:12 BST
 " capital P paste from buffer when in visual mode

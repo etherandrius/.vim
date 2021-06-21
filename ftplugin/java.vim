@@ -26,6 +26,18 @@ hi Folded ctermfg=grey
 hi Folded ctermbg=white
 set fillchars=fold:\ 
 
+
+" Fixed paragraph jumping
+nmap [[ [m
+nmap ]] ]m
+nmap ][ ]M
+nmap [] [M
+
+" Highlight functions
+let g:limelight_mode = 'movement'
+let g:limelight_bop = 'j[m0%'
+let g:limelight_eop = 'k]M'
+
 "
 set shiftwidth=4
 set tabstop=4
@@ -36,6 +48,10 @@ command! -nargs=0 Fmt :silent exec "!./gradlew format"
 
 " TEST {{{
 
+
+" If file is generated set it to readonly
+autocmd bufenter *.java if (expand('%:h') =~ '/generated/') | set readonly | else | set noreadonly | endif
+
 " Fold import statements
 " doesn't work
 " syn clear javaInclude
@@ -45,16 +61,16 @@ syn region foldImports start=/\(^\s*\n^import\)\@<= .\+;/ end=+^\s*$+ transparen
 
 
 " colours
-hi Include ctermfg=2
-hi StorageClass ctermfg=2
-hi Structure ctermfg=2
-hi Delimiter ctermfg=10
+hi Include ctermfg=2  guifg=#859900
+hi StorageClass ctermfg=2 guifg=#859900
+hi Structure ctermfg=2 guifg=#859900
+hi Delimiter ctermfg=10 guifg=#586e75
 " hi Type cterm=italic ctermfg=none
 " hi Type  ctermfg=none
-hi Typedef ctermfg=9
+hi Typedef ctermfg=9 guifg=#cb4b16
 
-hi JavaIdentifier ctermfg=none
-hi JavaAccessKeyword ctermfg=2
+hi JavaIdentifier ctermfg=none guifg=none
+hi JavaAccessKeyword ctermfg=2 guifg=#859900
 " hi JavaFunctionCall ctermfg=none cterm=italic
 
 " }}}
