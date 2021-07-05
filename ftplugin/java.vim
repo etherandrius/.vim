@@ -1,7 +1,11 @@
-" the only way
-set foldmethod=syntax
-set foldlevel=99
-set foldnestmax=2
+" Not the way
+" " the only way
+" set foldmethod=syntax
+" set foldlevel=99
+" set foldnestmax=2
+
+" The only way
+set foldmethod=manual
 
 " entire method
 syn region javaMethod start="^\z(\s*\)\(public\|private\|protected\)\(\_[^;]\)*{\s*$" end="^\z1}\s*$" transparent fold keepend
@@ -19,6 +23,11 @@ syn region javaTryCatch start="^\z(\s*\)\(try\|catch\).*{\s*$" end="^\z1}\s*$" t
 
 " add = ; pair for java files
 set matchpairs+==:;
+set matchpairs+=<:>
+
+
+nmap gf ]]F)%B
+nmap gF [[F)%B
 
 
 " Folds are ugly and common
