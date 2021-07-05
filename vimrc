@@ -93,6 +93,7 @@ call plug#begin()
 " testing
 Plug 'dhruvasagar/vim-zoom' " <C-w>m
 Plug 'etherandrius/limelight.vim' " Fork of limelight with movement support
+Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
 
 " coding
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax
