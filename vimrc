@@ -50,10 +50,16 @@ endfunction
 function! StatusJavaPath()
     let path = expand('%:h')
     if path =~ 'java/com/palantir/'
-        let path = substitute(path, "java/com/palantir/", "", "")
+        let path = substitute(path, "java/com/palantir/", "J/", "")
     endif
     if path =~ '/generated/'
         let path = substitute(path, "/generated/", "/G/", "")
+    endif
+    if path =~ '/src/test/'
+        let path = substitute(path, "/src/test/", "/T/", "")
+    endif
+    if path =~ '/src/main/'
+        let path = substitute(path, "/src/main/", "/M/", "")
     endif
     return path
 endfunction
@@ -66,14 +72,14 @@ set statusline+=%k " is modified
 set statusline+=%y " Syntax
 set statusline+=\ %1*[%t]%*
 " set statusline+=%{StatusFugitive()}
-set statusline+=%1*%{StatusGeneratedFile()}%*
+" set statusline+=%1*%{StatusGeneratedFile()}%*
 set statusline+=%1*%r%* " is read only 
 set statusline+=%{StatusZoom()}
 
 "set statusline+=(%<%{pathshorten(expand('%:h'))})
 " set statusline+=\ (%<%{expand('%:h')}) " Path to file relative to PWD
+set statusline+=%{StatusDiagnostic()}
 set statusline+=\ (%<%{StatusJavaPath()}) " Path to file relative to PWD
-set statusline+=\ %{StatusDiagnostic()}
 
 set statusline+=%= " align to right
 " set statusline+=\ %l/%L,%3v\ \ \  " current line / total lines, column number
