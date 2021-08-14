@@ -172,8 +172,8 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> ge <Plug>(coc-diagnostic-next)
-nmap <silent> gE <Plug>(coc-diagnostic-prev)
+nmap <silent> ge <Plug>(coc-diagnostic-next-error)
+nmap <silent> gE <Plug>(coc-diagnostic-prev-error)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
