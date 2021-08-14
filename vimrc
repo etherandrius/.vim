@@ -554,6 +554,7 @@ set belloff=all
 endif
 
 set foldenable
+set fdc=auto:3
 
 set number 
 set relativenumber
