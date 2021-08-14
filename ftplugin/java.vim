@@ -26,7 +26,7 @@ set matchpairs+==:;
 set matchpairs+=<:>
 
 
-nmap gf ]]F)%B
+nmap gf %l%]]F)%B
 nmap gF [[F)%B
 
 
