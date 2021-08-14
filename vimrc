@@ -386,7 +386,7 @@ endif
 
 
 " }}}
-
+ 
 " {{{ netrw
     let g:netrw_altfile = 1
 " }}}
@@ -605,7 +605,7 @@ set hlsearch
 set incsearch
 
 "leaves n lines between cursor and end of the screen
-set scrolloff=2
+set scrolloff=5
 set sidescrolloff=10
 set sidescroll=1
 
@@ -620,6 +620,8 @@ set shortmess+=r
 
 " when using list, keep tabs at their full width and display `arrows':
 execute 'set listchars+=tab:' . nr2char(187) . nr2char(183)
+set listchars+=extends:❯,precedes:❮,nbsp:␣
+
 " (Character 187 is a right double-chevron, and 183 a mid-dot.)
 
 set noswapfile
@@ -665,6 +667,7 @@ set modeline
 " }}} 
 " Test {{{
 
+hi TabLineSel ctermfg=DarkGreen ctermbg=White
 
 if exists('g:neovide')
     nnoremap <D-v> "+p
