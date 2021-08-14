@@ -311,16 +311,18 @@ nnoremap \tf :NERDTreeFind<cr>   " tree find
 nnoremap \tg :NERDTreeFocus<cr>  " tree go 
 " }}}
 " {{{ fzf
-let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --glob "!.git/*" --glob "!changelog" --glob "!vendor"'
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --no-ignore --glob "!.git/*" --glob "!changelog" --glob "!vendor"'
 if exists('g:neovide')
     " let $FZF_PREVIEW_COMMAND = 'highlight -O ansi --style=solarized-light -l {} || cat {}'
 else   
     let $FZF_PREVIEW_COMMAND = 'highlight -O ansi -l {} || cat {}'
 endif
 
+let g:fzf_preview_window = ['up:50%', 'ctrl-/']
+
 nmap <leader>b :BLines<CR>
-nmap <leader>t :Files<CR>
-nmap <leader>T :GFiles<CR>
+nmap <leader>T :Files<CR>
+nmap <leader>t :GFiles<CR>
 nmap <leader>rh :History<CR>
 nmap <leader>rb :Buffers<CR>
 
@@ -336,7 +338,7 @@ function! RipgrepFzfNoTest(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob "!changelog" --glob "!vendor" --glob "!*_test.go" --glob "!*Test.java" -- %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  let spec = {'options': ['--phony',  '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
