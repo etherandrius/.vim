@@ -110,6 +110,12 @@ Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+" nvim 0.5
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
+
 " visual
 Plug 'mtdl9/vim-log-highlighting' " syntax for log files
 Plug 'kshenoy/vim-signature' " shows marks
@@ -117,7 +123,6 @@ Plug 'scrooloose/nerdtree' "
 Plug 'osyo-manga/vim-brightest' " highlights current word in red
 Plug 'rodjek/vim-puppet' " puppet syntax
 Plug 'vim-scripts/MultipleSearch' " Highlight multiple words at the same time
-Plug 'etherandrius/java-syntax.vim' " syntax highlight for java
 
 " text objects
 Plug 'michaeljsmith/vim-indent-object'
@@ -310,21 +315,94 @@ nnoremap \tt :NERDTreeToggle<cr> " tree toggle
 nnoremap \tf :NERDTreeFind<cr>   " tree find
 nnoremap \tg :NERDTreeFocus<cr>  " tree go 
 " }}}
+" {{{ telescope
+" Find files using Telescope command-line sugar.
+
+" nnoremap <leader>ff <cmd>Telescope find_files<cr>
+" nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+" nnoremap <leader>fb <cmd>Telescope buffers<cr>
+" nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+lua << EOF
+local actions = require('telescope.actions')
+require('telescope').setup{
+  defaults = {
+      file_sorter = require('telescope.sorters').get_fzy_sorter,
+
+      file_previewer = require('telescope.previewers').vim_buffer_cat.new,
+
+      mappings = { 
+        i = {
+            ['<esc>'] = actions.close,
+        },
+      }
+  },
+
+  pickers = {
+      git_files = {
+          path_display = {
+              'shorten',
+          }
+      },
+      find_files = {
+          path_display = {
+              'shorten'
+          }
+      },
+  },
+
+  extensions = {
+      fzy_native = {
+          override_generic_sorter = false,
+          override_file_sorter = true,
+      }
+  }
+}
+
+require('telescope').load_extension('fzy_native')
+EOF
+
+" Using Lua functions
+nnoremap <leader>t <cmd>lua require('telescope.builtin').git_files()<cr>
+
+nnoremap <leader>T <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>b <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
+" nnoremap <leader>lp <cmd>lua require('telescope.builtin').lsp_code_actions()<cr>
+nnoremap <leader>rm <cmd>lua require('telescope.builtin').marks()<cr>
+nnoremap z= <cmd>lua require('telescope.builtin').spell_suggest()<cr>
+nnoremap <leader>rb <cmd>lua require('telescope.builtin').buffers()<cr>
+
+" nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>rh <cmd>lua require('telescope.builtin').oldfiles()<cr>
+
+" }}}
+" {{{ treesitter
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "java",
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
+
+" }}}
 " {{{ fzf
 let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --no-ignore --glob "!.git/*" --glob "!changelog" --glob "!vendor"'
 if exists('g:neovide')
-    " let $FZF_PREVIEW_COMMAND = 'highlight -O ansi --style=solarized-light -l {} || cat {}'
+    let $FZF_PREVIEW_COMMAND = 'highlight -O ansi --style=solarized-light -l {} || cat {}'
 else   
     let $FZF_PREVIEW_COMMAND = 'highlight -O ansi -l {} || cat {}'
 endif
 
 let g:fzf_preview_window = ['up:50%', 'ctrl-/']
 
-nmap <leader>b :BLines<CR>
-nmap <leader>T :Files<CR>
-nmap <leader>t :GFiles<CR>
-nmap <leader>rh :History<CR>
-nmap <leader>rb :Buffers<CR>
+" nmap <leader>b :BLines<CR>
+" nmap <leader>T :Files<CR>
+" nmap <leader>t :GFiles<CR>
+" nmap <leader>rh :History<CR>
+" nmap <leader>rb :Buffers<CR>
 
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob "!changelog" --glob "!vendor" -- %s || true'
@@ -352,25 +430,25 @@ command! -nargs=* -bang RGnotest call RipgrepFzfNoTest(<q-args>, <bang>0)
 " " command! -nargs=* -bang RMarks call fzf#vim#marks({'options': ['--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]']})
 " nmap <leader>rm :RMarks<CR>
 
-function! s:fzf_preview_p(bang, ...) abort
-    let preview_args = get(g:, 'fzf_preview_window', ['up:50%', 'ctrl-/'])
-    if empty(preview_args)
-        return { 'options': ['--preview-window', 'hidden'] }
-    endif
+" function! s:fzf_preview_p(bang, ...) abort
+"     let preview_args = get(g:, 'fzf_preview_window', ['up:50%', 'ctrl-/'])
+"     if empty(preview_args)
+"         return { 'options': ['--preview-window', 'hidden'] }
+"     endif
 
-    " For backward-compatiblity
-    if type(preview_args) == type('')
-        let preview_args = [preview_args]
-    endif
-    return call('fzf#vim#with_preview', extend(copy(a:000), preview_args))
-endfunction
+"     " For backward-compatiblity
+"     if type(preview_args) == type('')
+"         let preview_args = [preview_args]
+"     endif
+"     return call('fzf#vim#with_preview', extend(copy(a:000), preview_args))
+" endfunction
 
-  command! -bar -bang MP
-        \ call fzf#vim#marks(
-        \     s:fzf_preview_p(<bang>0, {'placeholder': '$([ -r $(echo {4} | sed "s#^~#$HOME#") ] && echo {4} || echo ' . fzf#shellescape(expand('%')) . '):{2}',
-        \               'options': '--preview-window +{2}-/2'}),
-        \     <bang>0)
-nmap <leader>rm :MP<CR>
+"   command! -bar -bang MP
+"         \ call fzf#vim#marks(
+"         \     s:fzf_preview_p(<bang>0, {'placeholder': '$([ -r $(echo {4} | sed "s#^~#$HOME#") ] && echo {4} || echo ' . fzf#shellescape(expand('%')) . '):{2}',
+"         \               'options': '--preview-window +{2}-/2'}),
+"         \     <bang>0)
+" nmap <leader>rm :MP<CR>
 
 " }}}
 " {{{ vim-fugitive rhubarb
@@ -554,11 +632,11 @@ set belloff=all
 endif
 
 set foldenable
-augroup remember_folds
-  autocmd!
-  autocmd BufWinLeave * mkview
-  autocmd BufWinEnter * silent! loadview
-augroup END
+" augroup remember_folds
+"   autocmd!
+"   autocmd BufWinLeave * mkview
+"   autocmd BufWinEnter * silent! loadview
+" augroup END
 " automatic fold column
 set fdc=auto:7
 " remove annoying dots when lines are folded
