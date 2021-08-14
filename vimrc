@@ -554,7 +554,11 @@ set belloff=all
 endif
 
 set foldenable
+" automatic fold column
 set fdc=auto:3
+" remove annoying dots when lines are folded
+set fillchars+=fold:\ 
+
 
 set number 
 set relativenumber
