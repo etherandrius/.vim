@@ -554,10 +554,16 @@ set belloff=all
 endif
 
 set foldenable
+augroup remember_folds
+  autocmd!
+  autocmd BufWinLeave * mkview
+  autocmd BufWinEnter * silent! loadview
+augroup END
 " automatic fold column
-set fdc=auto:3
+set fdc=auto:7
 " remove annoying dots when lines are folded
 set fillchars+=fold:\ 
+
 
 
 set number 
