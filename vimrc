@@ -81,38 +81,38 @@ set statusline+=\ %L,%3v\ \ \  " total lines, column number
 call plug#begin()
 
 " coding
-Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax
-Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
-Plug 'liuchengxu/vista.vim' "  LSP tag viewer and finder
+Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax TODO I don't use go anymore do I need this ? can I replace this with treesitter
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch TODO use nvim LSP
+Plug 'liuchengxu/vista.vim' "  LSP tag viewer and finder TODO nuke this
 
 " qol
 Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
 Plug 'tpope/vim-fugitive' " essential
 Plug 'djoshea/vim-autoread' " auto-reads changes to files TODO change this to inbuild nvim inode reader stuff
 Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
+Plug 'scrooloose/nerdtree' " TODO replace this one day
 
 " search
 Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
 " nvim 0.5
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
 " visual
-Plug 'mtdl9/vim-log-highlighting' " syntax for log files
-Plug 'kshenoy/vim-signature' " shows marks
-Plug 'scrooloose/nerdtree' " 
 Plug 'osyo-manga/vim-brightest' " highlights current word in red
-Plug 'rodjek/vim-puppet' " puppet syntax
 Plug 'vim-scripts/MultipleSearch' " Highlight multiple words at the same time
+Plug 'kshenoy/vim-signature' " shows marks
+Plug 'mtdl9/vim-log-highlighting' " syntax for log files
+Plug 'rodjek/vim-puppet' " puppet syntax TODO nuke this or replace with treesitter when it becomes available
 
 " text objects
+Plug 'wellle/targets.vim' " arguments objects TODO find a better one, maybe there is a treesitter one now?
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'wellle/targets.vim' " arguments objects - try finding an alternative
 Plug 'tpope/vim-commentary' " essential
 Plug 'kana/vim-textobj-user' " Needed for vim-textobj-function
 Plug 'kana/vim-textobj-function' " supposed to gve function text object for java + others
