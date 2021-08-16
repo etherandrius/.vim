@@ -22,15 +22,6 @@ endif
 let mapleader="\<Space>"
 
 " Statusline {{{
-
-function! StatusZoom()
-  let zoomed = zoom#statusline()
-  if (zoomed == '')
-    return ''
-  endif
-  return '[' . zoomed . ']'
-endfunction
-
 function! StatusFugitive()
   let branch = FugitiveStatusline()
   if (branch == '')
@@ -74,7 +65,6 @@ set statusline+=\ %1*[%t]%*
 " set statusline+=%{StatusFugitive()}
 " set statusline+=%1*%{StatusGeneratedFile()}%*
 set statusline+=%1*%r%* " is read only 
-set statusline+=%{StatusZoom()}
 
 "set statusline+=(%<%{pathshorten(expand('%:h'))})
 " set statusline+=\ (%<%{expand('%:h')}) " Path to file relative to PWD
@@ -90,11 +80,6 @@ set statusline+=\ %L,%3v\ \ \  " total lines, column number
 " Plugins {{{
 call plug#begin()
 
-" testing
-Plug 'dhruvasagar/vim-zoom' " <C-w>m
-Plug 'etherandrius/limelight.vim' " Fork of limelight with movement support
-Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
-
 " coding
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch
@@ -103,7 +88,8 @@ Plug 'liuchengxu/vista.vim' "  LSP tag viewer and finder
 " qol
 Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
 Plug 'tpope/vim-fugitive' " essential
-Plug 'djoshea/vim-autoread' " auto-reads changes to files
+Plug 'djoshea/vim-autoread' " auto-reads changes to files TODO change this to inbuild nvim inode reader stuff
+Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
 
 " search
 Plug 'jremmen/vim-ripgrep'
@@ -365,14 +351,14 @@ EOF
 " Using Lua functions
 nnoremap <leader>t <cmd>lua require('telescope.builtin').git_files()<cr>
 
-nnoremap <leader>T <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>T <cmd>lua require('telescope.builtin').find_files({find_command = {'rg', '--files', '--no-ignore'}})<cr>
 nnoremap <leader>b <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
 " nnoremap <leader>lp <cmd>lua require('telescope.builtin').lsp_code_actions()<cr>
 nnoremap <leader>rm <cmd>lua require('telescope.builtin').marks()<cr>
 nnoremap z= <cmd>lua require('telescope.builtin').spell_suggest()<cr>
 nnoremap <leader>rb <cmd>lua require('telescope.builtin').buffers()<cr>
 
-" nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+" nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep({vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-u' }})<cr>
 nnoremap <leader>rh <cmd>lua require('telescope.builtin').oldfiles()<cr>
 
 " }}}
@@ -632,6 +618,7 @@ set belloff=all
 endif
 
 set foldenable
+" this breaks telescope think about using their provided autocms stuff
 " augroup remember_folds
 "   autocmd!
 "   autocmd BufWinLeave * mkview
