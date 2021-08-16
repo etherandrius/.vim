@@ -83,7 +83,6 @@ call plug#begin()
 " coding
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax TODO I don't use go anymore do I need this ? can I replace this with treesitter
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch TODO use nvim LSP
-Plug 'liuchengxu/vista.vim' "  LSP tag viewer and finder TODO nuke this
 
 " qol
 Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
@@ -209,8 +208,7 @@ nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
 nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Outline of the document - deprecated by vista
-" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
 " nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
@@ -228,26 +226,6 @@ let g:coc_global_extensions = [
 
 
 " }}} 
-" {{{ Vista
-
-" source ~/.vim/plugged/vista.vim/autoload/vista/executive/coc.vim
-
-" Executive used when opening vista sidebar without specifying it.
-" See all the avaliable executives via `:echo g:vista#executives`.
-let g:vista_default_executive = 'coc'
-
-let g:vista_blink = [0, 0]
-let g:vista_top_level_blink = [0, 0]
-let g:vista_keep_fzf_colors = 0
-let g:vista#renderer#enable_icon = 0
-let g:vista_disable_statusline = 1
-
-" let g:vista_fzf_preview = ['up:50%']
-" let g:vista_fzf_opt = ['--keep-right']
-
-nnoremap <silent> <space>o  :<C-u>Vista finder coc<cr>
-
-" }}}
 " vim-go configuration {{{
 
 " disable vim-go :GoDef short cut (gd)
@@ -439,16 +417,6 @@ command! -nargs=* -bang RGnotest call RipgrepFzfNoTest(<q-args>, <bang>0)
 " }}}
 " {{{ vim-fugitive rhubarb
 let g:github_enterprise_urls = ['https://github.palantir.build']
-" }}}
-" {{{ limelight 
-
-if &background == "light"
-    let g:limelight_conceal_ctermfg = '11'
-else
-    let g:limelight_conceal_ctermfg = '12'
-endif
-
-
 " }}}
  
 " {{{ netrw
