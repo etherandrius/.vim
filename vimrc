@@ -395,10 +395,15 @@ function! RipgrepFzfNoTest(query, fullscreen)
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
-nmap <leader>rg :RG!<CR>
-
 command! -nargs=* -bang RGnotest call RipgrepFzfNoTest(<q-args>, <bang>0)
+nmap <leader>rg :RGnotest!<CR>
+vmap <leader>rg y:RGnotest! <C-r>0<CR>
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+nmap <leader>Rg :RG!<CR>
+vmap <leader>Rg y:RG! <C-r>0<CR>
+
+
 
 " " https://github.com/junegunn/fzf.vim/issues/184
 " command! -nargs=* -bang RMarks call fzf#vim#marks({'options': ['--preview', 'cat -n {-1}']})
