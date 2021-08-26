@@ -38,6 +38,14 @@ function! StatusGeneratedFile()
     return ''
 endfunction
 
+function! StatusFugitiveDiffFile()
+    let path = expand('%:h')
+    if path =~ 'fugitive://'
+        return '[Diff]'
+    endif
+    return ''
+endfunction
+
 function! StatusJavaPath()
     let path = expand('%:h')
     if path =~ 'java/com/palantir/'
@@ -63,7 +71,8 @@ set statusline+=%k " is modified
 set statusline+=%y " Syntax
 set statusline+=\ %1*[%t]%*
 " set statusline+=%{StatusFugitive()}
-" set statusline+=%1*%{StatusGeneratedFile()}%*
+set statusline+=%1*%{StatusGeneratedFile()}%*
+set statusline+=%1*%{StatusFugitiveDiffFile()}%*
 set statusline+=%1*%r%* " is read only 
 
 "set statusline+=(%<%{pathshorten(expand('%:h'))})
