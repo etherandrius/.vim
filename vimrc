@@ -742,6 +742,10 @@ nnoremap <Right> E
 vnoremap <Left> B
 vnoremap <Right> E
 
+nnoremap gb gT
+nnoremap <Up> gt
+nnoremap <Down> gT
+
 if exists('g:neovide')
     nnoremap <D-v> "+p
     vnoremap <D-v> "+p
