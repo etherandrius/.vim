@@ -291,6 +291,7 @@ lua << EOF
 local actions = require('telescope.actions')
 require('telescope').setup{
   defaults = {
+
       file_sorter = require('telescope.sorters').get_fzy_sorter,
 
       file_previewer = require('telescope.previewers').vim_buffer_cat.new,
@@ -309,6 +310,16 @@ require('telescope').setup{
           }
       },
       find_files = {
+          path_display = {
+              'shorten'
+          }
+      },
+      oldfiles = {
+          path_display = {
+              'shorten'
+          }
+      },
+      live_grep = {
           path_display = {
               'shorten'
           }
