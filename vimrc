@@ -728,6 +728,11 @@ set modeline
 
 hi TabLineSel ctermfg=DarkGreen ctermbg=White
 
+nnoremap <Left> B
+nnoremap <Right> E
+vnoremap <Left> B
+vnoremap <Right> E
+
 if exists('g:neovide')
     nnoremap <D-v> "+p
     vnoremap <D-v> "+p
