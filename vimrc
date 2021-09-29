@@ -122,8 +122,8 @@ Plug 'rodjek/vim-puppet' " puppet syntax TODO nuke this or replace with treesitt
 Plug 'wellle/targets.vim' " arguments objects TODO find a better one, maybe there is a treesitter one now?
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'tpope/vim-commentary' " essential
-Plug 'kana/vim-textobj-user' " Needed for vim-textobj-function
-Plug 'kana/vim-textobj-function' " supposed to gve function text object for java + others
+" Plug 'kana/vim-textobj-user' " Needed for vim-textobj-function
+" Plug 'kana/vim-textobj-function' " supposed to gve function text object for java + others
 
 call plug#end()
 
@@ -442,6 +442,10 @@ vmap <leader>Rg y:RG! <C-r>0<CR>
 " }}}
 " {{{ vim-fugitive rhubarb
 let g:github_enterprise_urls = ['https://github.palantir.build']
+" }}}
+" {{{ targets
+let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
+let g:targets_aiAI = 'aIAi'
 " }}}
  
 " {{{ netrw
