@@ -287,6 +287,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 nnoremap \tt :NERDTreeToggle<cr> " tree toggle 
 nnoremap \tf :NERDTreeFind<cr>   " tree find
 nnoremap \tg :NERDTreeFocus<cr>  " tree go 
+
+let NERDTreeShowHidden=1
+
 " }}}
 " {{{ telescope
 " Find files using Telescope command-line sugar.
