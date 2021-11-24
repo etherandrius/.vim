@@ -304,7 +304,6 @@ local actions = require('telescope.actions')
 require('telescope').setup{
   defaults = {
 
-      file_sorter = require('telescope.sorters').get_fzy_sorter,
 
       file_previewer = require('telescope.previewers').vim_buffer_cat.new,
 
@@ -338,12 +337,6 @@ require('telescope').setup{
       },
   },
 
-  extensions = {
-      fzy_native = {
-          override_generic_sorter = false,
-          override_file_sorter = true,
-      }
-  }
 }
 
 require('telescope').load_extension('fzy_native')
@@ -360,7 +353,7 @@ nnoremap z= <cmd>lua require('telescope.builtin').spell_suggest()<cr>
 nnoremap <leader>rb <cmd>lua require('telescope.builtin').buffers()<cr>
 
 " nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep({vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-u' }})<cr>
-nnoremap <leader>rh <cmd>lua require('telescope.builtin').oldfiles()<cr>
+" nnoremap <leader>rh <cmd>lua require('telescope.builtin').oldfiles()<cr>
 
 " }}}
 " {{{ treesitter
@@ -388,7 +381,7 @@ let g:fzf_preview_window = ['up:50%', 'ctrl-/']
 " nmap <leader>b :BLines<CR>
 " nmap <leader>T :Files<CR>
 " nmap <leader>t :GFiles<CR>
-" nmap <leader>rh :History<CR>
+nmap <leader>rh :History<CR>
 " nmap <leader>rb :Buffers<CR>
 
 function! RipgrepFzf(query, fullscreen)
@@ -496,6 +489,7 @@ command -nargs=0 Source :source ~/.vimrc
 endif
 " command! -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
 command! -nargs=0 Flush :NERDTreeRefreshRoot
+
 
 " }}}
 " Remapings {{{
@@ -742,6 +736,9 @@ set modeline
 " }}} 
 " Test {{{
 
+
+command! -nargs=0 Log :execute "normal! yyP%%i<CR><CR><ESC>V!jq<CR>%o<ESC>jV!slslog<CR>"
+
 hi TabLineSel ctermfg=DarkGreen ctermbg=White
 
 nnoremap <Left> B
@@ -761,13 +758,8 @@ if exists('g:neovide')
 endif
 
 " (aagg) Fri 14 May 2021 00:42:12 BST
-" capital P paste from buffer when in visual mode
-vnoremap P "0p
 nnoremap <silent> <space>p "0p
 vnoremap <silent> <space>p "0p
-
-" this does not seem to stick
-inoremap jj <esc>
 
 " Trying this out in order to use H, L, M more
 nnoremap ZZ zz 
@@ -794,16 +786,15 @@ function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
 
   if (line > 0 && line <= lastline)
     let line = line + stepvalue
-    if ( ! a:lowerlevel && indent(line) == indent ||
-        \ a:lowerlevel && indent(line) < indent)
-    if (! a:skipblanks || strlen(getline(line)) > 0)
-      if (a:exclusive)
-        let line = line - stepvalue
-      endif
-      exe line
-      exe "normal " column . "|"
-      return
-    endif
+    if ( ! a:lowerlevel && indent(line) == indent || a:lowerlevel && indent(line) < indent)
+        if (strlen(getline(line)) > 0)
+          if (a:exclusive)
+            let line = line - stepvalue
+          endif
+          exe line
+          exe "normal " column . "|"
+          return
+        endif
     endif
   endif
 
@@ -813,9 +804,8 @@ function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
 
   while (line > 0 && line <= lastline) " && (indent <= indent(line) || (indent(line) == 0 && strlen(getline(line)) == 0) ))
     let line = line + stepvalue
-    if ( ! a:lowerlevel && indent(line) == indent ||
-          \ a:lowerlevel && indent(line) < indent)
-      if (! a:skipblanks || strlen(getline(line)) > 0)
+    if ( ! a:lowerlevel && indent(line) == indent || a:lowerlevel && indent(line) < indent)
+      if (strlen(getline(line)) > 0)
         if (a:exclusive)
           let line = line - stepvalue
         endif
@@ -826,8 +816,51 @@ function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
     endif
   endwhile
 endfunction
+" {{{ copy
+" function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
+"   let line = line('.')
+"   let column = col('.')
+"   let ogLine = line('.')
+"   let ogColumn = col('.')
+"   let lastline = line('$')
+"   let indent = indent(line)
+"   let stepvalue = a:fwd ? 1 : -1
+"   if (line > 0 && line <= lastline)
+"     let line = line + stepvalue
+"     if ( ! a:lowerlevel && indent(line) == indent ||
+"         \ a:lowerlevel && indent(line) < indent)
+"     if (! a:skipblanks || strlen(getline(line)) > 0)
+"       if (a:exclusive)
+"         let line = line - stepvalue
+"       endif
+"       exe line
+"       exe "normal " column . "|"
+"       return
+"     endif
+"     endif
+"   endif
+"   " adds the current position to the jump list
+"   normal! m`
+"   call cursor(ogLine, ogColumn)
+"   while (line > 0 && line <= lastline) " && (indent <= indent(line) || (indent(line) == 0 && strlen(getline(line)) == 0) ))
+"     let line = line + stepvalue
+"     if ( ! a:lowerlevel && indent(line) == indent ||
+"           \ a:lowerlevel && indent(line) < indent)
+"       if (! a:skipblanks || strlen(getline(line)) > 0)
+"         if (a:exclusive)
+"           let line = line - stepvalue
+"         endif
+"         exe line
+"         exe "normal " column . "|"
+"         return
+"       endif
+"     endif
+"   endwhile
+" endfunction
+"}}}
 
 " Moving back and forth between lines of same or lower indentation.
+noremap <silent> <C-h> :call NextIndent(0, 0, 1, 1)<CR>
 noremap <silent> <C-k> :call NextIndent(0, 0, 0, 1)<CR>
 noremap <silent> <C-j> :call NextIndent(0, 1, 0, 1)<CR>
 vnoremap <silent> <C-k> <Esc>:call NextIndent(0, 0, 0, 1)<CR>m'gv''
