@@ -74,6 +74,8 @@
     "<C-n>": "do:next",
     "<C-p>": "do:previous"
   },
-  "npm.binPath": "npm --registry https://registry.npmjs.org"
+  "npm.binPath": "npm --registry https://registry.npmjs.org",
+  "java.completion.importOrder": "[com, java, javax, org]",
+  "java.format.settings.url": "/Users/agrabauskas/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml"
 }
 
