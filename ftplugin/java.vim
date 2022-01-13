@@ -11,22 +11,10 @@ set foldmethod=manual
 set matchpairs+==:;
 set matchpairs+=<:>
 
-
-nmap gf %l%]]F)%B
-nmap gF [[F)%B
-
-
 " Folds are ugly and common
 hi Folded ctermfg=grey
 hi Folded ctermbg=white
 set fillchars=fold:\ 
-
-
-" Fixed paragraph jumping
-nmap [[ [m
-nmap ]] ]m
-nmap ][ ]M
-nmap [] [M
 
 " Highlight functions
 let g:limelight_mode = 'movement'

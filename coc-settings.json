@@ -41,27 +41,31 @@
       "filetypes": ["puppet"],
       "rootPatterns": [".git/", "metadata.json"]
     },
-    "golang": {
-      "command": "gopls",
-      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
-      "filetypes": ["go"],
-      "env": {
-          "GOFLAGS": "-tags=linux",
-      },
-      "initializationOptions": {
-        "usePlaceholders": true,
-        "staticcheck": true,
-        "watchChangedFiled": true,
-        "fuzzyMatching": true,
-        "analyses": {
-          "fillstruct": true
-        },
-        "codelenses": {
-          "test": true
-        }
-      }
-   }
+//    "golang": {
+//      "command": "gopls",
+//      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+//      "filetypes": ["go"],
+//      "env": {
+//          "GOFLAGS": "-tags=linux",
+//      },
+//      "initializationOptions": {
+//        "usePlaceholders": true,
+//        "staticcheck": true,
+//        "watchChangedFiled": true,
+//        "fuzzyMatching": true,
+//        "analyses": {
+//          "fillstruct": true
+//        },
+//        "codelenses": {
+//          "test": true
+//        }
+//      }
+//   }
   }, 
+//  "go.goplsOptions": {
+//    "usePlaceholders": true,
+//    "completeUnimported": true
+//  }
   "codeLens.enable": true,
   "coc.preferences.useQuickfixForLocations": true,
   "list.normalMappings": {
@@ -75,7 +79,7 @@
     "<C-p>": "do:previous"
   },
   "npm.binPath": "npm --registry https://registry.npmjs.org",
-  "java.completion.importOrder": "[com, java, javax, org]",
+  "java.completion.importOrder": "[]",
   "java.format.settings.url": "/Users/agrabauskas/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml"
 }
 

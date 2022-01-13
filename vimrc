@@ -5,12 +5,8 @@ endif
 
 set nocompatible
 
-if strftime("%H") < 5 || strftime("%H") > 23
-  set background=dark
-else
-  set background=light
-endif
 syntax on
+set background=light
 if has("gui_running") || exists('g:neovide')
     colorscheme solarized
 else
@@ -92,6 +88,7 @@ call plug#begin()
 " coding
 Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better syntax TODO I don't use go anymore do I need this ? can I replace this with treesitter
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch TODO use nvim LSP
+Plug 'fannheyward/telescope-coc.nvim' " using telescope with coc
 
 " qol
 Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
@@ -117,11 +114,13 @@ Plug 'vim-scripts/MultipleSearch' " Highlight multiple words at the same time
 Plug 'kshenoy/vim-signature' " shows marks
 Plug 'mtdl9/vim-log-highlighting' " syntax for log files
 Plug 'rodjek/vim-puppet' " puppet syntax TODO nuke this or replace with treesitter when it becomes available
+Plug 'junegunn/goyo.vim' " goyo
 
 " text objects
 Plug 'wellle/targets.vim' " arguments objects TODO find a better one, maybe there is a treesitter one now?
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'tpope/vim-commentary' " essential
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 " Plug 'kana/vim-textobj-user' " Needed for vim-textobj-function
 " Plug 'kana/vim-textobj-function' " supposed to gve function text object for java + others
 
@@ -174,8 +173,10 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> ge <Plug>(coc-diagnostic-next-error)
 nmap <silent> gE <Plug>(coc-diagnostic-prev-error)
 nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+" nmap <silent> gi <Plug>(coc-implementation)
+nmap gi :Telescope coc implementations theme=ivy<CR>
+" nmap <silent> gr <Plug>(coc-references)
+nmap gr :Telescope coc references theme=ivy<CR>
 nmap <silent> gl <Plug>(coc-codelens-action)
 
 " Use K to show documentation in preview window
@@ -212,16 +213,21 @@ nmap <leader>rn <Plug>(coc-rename)
 vmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 " Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <space>d  :<C-u>CocList diagnostics<cr>
+" nnoremap <silent> <space>d  :Telescope coc diagnostics<cr>
 " Manage extensions
 nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" nnoremap <silent> <space>e  :Telescope coc extensions<cr>
 " Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+nnoremap <silent> <space>c  :Telescope coc commands theme=dropdown<cr>
+nnoremap <silent> <space>a  :Telescope coc code_actions theme=dropdown<cr>
+" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>o  :Telescope coc document_symbols theme=dropdown width=160 height=30<cr>
 " Search workspace symbols
 " nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " auto-organize imports
 " gives error *[coc.nvim] Orgnize import action not found.* including misspeled Orgnize
@@ -230,9 +236,12 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 let g:coc_global_extensions = [
 \ 'coc-yaml',
 \ 'coc-java',
+\ 'coc-go',
 \ ]
 
-
+lua << EOF
+require('telescope').load_extension('coc')
+EOF
 
 " }}} 
 " vim-go configuration {{{
@@ -303,14 +312,9 @@ lua << EOF
 local actions = require('telescope.actions')
 require('telescope').setup{
   defaults = {
-
-
       file_previewer = require('telescope.previewers').vim_buffer_cat.new,
 
       mappings = { 
-        i = {
-            ['<esc>'] = actions.close,
-        },
       }
   },
 
@@ -345,8 +349,9 @@ EOF
 " Using Lua functions
 nnoremap <leader>t <cmd>lua require('telescope.builtin').git_files()<cr>
 
-nnoremap <leader>T <cmd>lua require('telescope.builtin').find_files({find_command = {'rg', '--files', '--no-ignore'}})<cr>
-nnoremap <leader>b <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
+nnoremap <leader>T <cmd>lua require('telescope.builtin').find_files({find_command = {'rg', '--files', '--no-ignore', '--glob', '!*.class'}})<cr>
+" nnoremap <leader>b <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
+nnoremap <leader>b <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find({previewer=false})<cr>
 " nnoremap <leader>lp <cmd>lua require('telescope.builtin').lsp_code_actions()<cr>
 nnoremap <leader>rm <cmd>lua require('telescope.builtin').marks()<cr>
 nnoremap z= <cmd>lua require('telescope.builtin').spell_suggest()<cr>
@@ -366,7 +371,44 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
+" }}}
+" {{{ treesitter-textobjects
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = false,
 
+      keymaps = {
+        -- You can use the capture groups defined in textobjects.scm
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+      },
+    },
+
+    move = {
+      enable = true,
+      set_jumps = true, -- whether to set jumps in the jumplist
+      goto_next_start = {
+        ["]]"] = "@function.outer",
+      },
+      goto_next_end = {
+        ["]["] = "@function.outer",
+      },
+      goto_previous_start = {
+        ["[["] = "@function.outer",
+      },
+      goto_previous_end = {
+        ["[]"] = "@function.outer",
+      },
+    },
+  },
+}
+
+EOF
 " }}}
 " {{{ fzf
 let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --no-ignore --glob "!.git/*" --glob "!changelog" --glob "!vendor"'
@@ -385,7 +427,7 @@ nmap <leader>rh :History<CR>
 " nmap <leader>rb :Buffers<CR>
 
 function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob "!changelog" --glob "!vendor" -- %s || true'
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case --glob !"changelog" --glob "!vendor" -- %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
@@ -443,7 +485,6 @@ let g:github_enterprise_urls = ['https://github.palantir.build']
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
 let g:targets_aiAI = 'aIAi'
 " }}}
- 
 " {{{ netrw
     let g:netrw_altfile = 1
 " }}}
@@ -736,7 +777,6 @@ set modeline
 " }}} 
 " Test {{{
 
-
 command! -nargs=0 Log :execute "normal! yyP%%i<CR><CR><ESC>V!jq<CR>%o<ESC>jV!slslog<CR>"
 
 hi TabLineSel ctermfg=DarkGreen ctermbg=White
@@ -746,7 +786,6 @@ nnoremap <Right> E
 vnoremap <Left> B
 vnoremap <Right> E
 
-nnoremap gb gT
 nnoremap <Up> gt
 nnoremap <Down> gT
 
@@ -760,9 +799,6 @@ endif
 " (aagg) Fri 14 May 2021 00:42:12 BST
 nnoremap <silent> <space>p "0p
 vnoremap <silent> <space>p "0p
-
-" Trying this out in order to use H, L, M more
-nnoremap ZZ zz 
 
 " Jump to the next or previous line that has the same level or a lower
 " level of indentation than the current line.
@@ -816,48 +852,6 @@ function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
     endif
   endwhile
 endfunction
-" {{{ copy
-" function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
-"   let line = line('.')
-"   let column = col('.')
-"   let ogLine = line('.')
-"   let ogColumn = col('.')
-"   let lastline = line('$')
-"   let indent = indent(line)
-"   let stepvalue = a:fwd ? 1 : -1
-"   if (line > 0 && line <= lastline)
-"     let line = line + stepvalue
-"     if ( ! a:lowerlevel && indent(line) == indent ||
-"         \ a:lowerlevel && indent(line) < indent)
-"     if (! a:skipblanks || strlen(getline(line)) > 0)
-"       if (a:exclusive)
-"         let line = line - stepvalue
-"       endif
-"       exe line
-"       exe "normal " column . "|"
-"       return
-"     endif
-"     endif
-"   endif
-"   " adds the current position to the jump list
-"   normal! m`
-"   call cursor(ogLine, ogColumn)
-"   while (line > 0 && line <= lastline) " && (indent <= indent(line) || (indent(line) == 0 && strlen(getline(line)) == 0) ))
-"     let line = line + stepvalue
-"     if ( ! a:lowerlevel && indent(line) == indent ||
-"           \ a:lowerlevel && indent(line) < indent)
-"       if (! a:skipblanks || strlen(getline(line)) > 0)
-"         if (a:exclusive)
-"           let line = line - stepvalue
-"         endif
-"         exe line
-"         exe "normal " column . "|"
-"         return
-"       endif
-"     endif
-"   endwhile
-" endfunction
-"}}}
 
 " Moving back and forth between lines of same or lower indentation.
 noremap <silent> <C-h> :call NextIndent(0, 0, 1, 1)<CR>
