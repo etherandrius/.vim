@@ -93,6 +93,7 @@ Plug 'fannheyward/telescope-coc.nvim' " using telescope with coc
 " qol
 Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
 Plug 'tpope/vim-fugitive' " essential
+Plug 'tpope/vim-speeddating' " better (de/in)crementing of date strings: (play Thu, 11 Apr 2002 00:59:58 +0000)
 Plug 'djoshea/vim-autoread' " auto-reads changes to files TODO change this to inbuild nvim inode reader stuff
 Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
 Plug 'scrooloose/nerdtree' " TODO replace this one day
@@ -173,8 +174,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> ge <Plug>(coc-diagnostic-next-error)
 nmap <silent> gE <Plug>(coc-diagnostic-prev-error)
 nmap <silent> gy <Plug>(coc-type-definition)
-" nmap <silent> gi <Plug>(coc-implementation)
-nmap gi :Telescope coc implementations theme=ivy<CR>
+nmap <silent> gi <Plug>(coc-implementation)
+" nmap gi :Telescope coc implementations theme=ivy<CR>
 " nmap <silent> gr <Plug>(coc-references)
 nmap gr :Telescope coc references theme=ivy<CR>
 nmap <silent> gl <Plug>(coc-codelens-action)
@@ -238,10 +239,6 @@ let g:coc_global_extensions = [
 \ 'coc-java',
 \ 'coc-go',
 \ ]
-
-lua << EOF
-require('telescope').load_extension('coc')
-EOF
 
 " }}} 
 " vim-go configuration {{{
@@ -343,6 +340,7 @@ require('telescope').setup{
 
 }
 
+require('telescope').load_extension('coc')
 require('telescope').load_extension('fzy_native')
 EOF
 
@@ -481,6 +479,11 @@ vmap <leader>Rg y:RG! <C-r>0<CR>
 " {{{ vim-fugitive rhubarb
 let g:github_enterprise_urls = ['https://github.palantir.build']
 " }}}
+" {{{ goyo
+let g:goyo_linenr = 1 
+let g:goyo_height = "100%"
+let g:goyo_width = "55%"
+" }}}
 " {{{ targets
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
 let g:targets_aiAI = 'aIAi'
@@ -499,6 +502,9 @@ source ~/.vim/spell/abbrev.vim
 " *.txt fiels are filetype human
 augroup filetype
   autocmd BufNewFile,BufRead *.txt set filetype=human
+augroup END
+augroup filetype
+  autocmd BufNewFile,BufRead *.class set filetype=java
 augroup END
 
 " Remember cursor position
@@ -786,8 +792,8 @@ nnoremap <Right> E
 vnoremap <Left> B
 vnoremap <Right> E
 
-nnoremap <Up> gt
-nnoremap <Down> gT
+nnoremap <Up> gT
+nnoremap <Down> gt
 
 if exists('g:neovide')
     nnoremap <D-v> "+p
