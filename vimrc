@@ -97,13 +97,16 @@ Plug 'tpope/vim-speeddating' " better (de/in)crementing of date strings: (play T
 Plug 'djoshea/vim-autoread' " auto-reads changes to files TODO change this to inbuild nvim inode reader stuff
 Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
 Plug 'scrooloose/nerdtree' " TODO replace this one day
+Plug 'cohama/lexima.vim' " autclose paren
+Plug 'windwp/nvim-spectre' " :SearchAndReplace
 
-" search
+" navigation
 Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'ThePrimeagen/harpoon' " Global marks but better, project Specific
 
 " nvim 0.5
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
@@ -122,8 +125,6 @@ Plug 'wellle/targets.vim' " arguments objects TODO find a better one, maybe ther
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'tpope/vim-commentary' " essential
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-" Plug 'kana/vim-textobj-user' " Needed for vim-textobj-function
-" Plug 'kana/vim-textobj-function' " supposed to gve function text object for java + others
 
 call plug#end()
 
@@ -351,12 +352,19 @@ nnoremap <leader>T <cmd>lua require('telescope.builtin').find_files({find_comman
 " nnoremap <leader>b <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
 nnoremap <leader>b <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find({previewer=false})<cr>
 " nnoremap <leader>lp <cmd>lua require('telescope.builtin').lsp_code_actions()<cr>
-nnoremap <leader>rm <cmd>lua require('telescope.builtin').marks()<cr>
 nnoremap z= <cmd>lua require('telescope.builtin').spell_suggest()<cr>
 nnoremap <leader>rb <cmd>lua require('telescope.builtin').buffers()<cr>
 
+
+
 " nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep({vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-u' }})<cr>
 " nnoremap <leader>rh <cmd>lua require('telescope.builtin').oldfiles()<cr>
+
+" }}}
+" {{{ harpoon
+
+nnoremap <leader>rm <cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>
+command! -nargs=0 HarpoonAddFile :lua require("harpoon.mark").add_file()
 
 " }}}
 " {{{ treesitter
@@ -488,6 +496,9 @@ let g:goyo_width = "55%"
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
 let g:targets_aiAI = 'aIAi'
 " }}}
+" {{{
+command! -nargs=0 SearchAndReplace :lua require('spectre').open()<CR>
+" }}}
 " {{{ netrw
     let g:netrw_altfile = 1
 " }}}
@@ -536,6 +547,13 @@ command -nargs=0 Source :source ~/.vimrc
 endif
 " command! -nargs=0 Flush :NERDTreeRefreshRoot | :CommandTFlush
 command! -nargs=0 Flush :NERDTreeRefreshRoot
+
+" {{{ Fold
+command! -nargs=0 FoldCloseAll :norm zM
+command! -nargs=0 FoldOpenAll :norm zR
+command! -nargs=0 FoldCloseAllOther :norm zMzA
+" }}}
+
 
 
 " }}}
