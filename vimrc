@@ -100,13 +100,18 @@ Plug 'scrooloose/nerdtree' " TODO replace this one day
 Plug 'cohama/lexima.vim' " autclose paren
 Plug 'windwp/nvim-spectre' " :SearchAndReplace
 
+
 " navigation
 Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'ibhagwan/fzf-lua', { 'branch' : 'main' }
+Plug 'kyazdani42/nvim-web-devicons' " optional for icon support (fzf-lua)
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'ThePrimeagen/harpoon' " Global marks but better, project Specific
+Plug 'stevearc/aerial.nvim' " function outline
+Plug 'ggandor/lightspeed.nvim', { 'branch' : 'main' } " type where you look
 
 " nvim 0.5
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
@@ -117,8 +122,9 @@ Plug 'osyo-manga/vim-brightest' " highlights current word in red
 Plug 'vim-scripts/MultipleSearch' " Highlight multiple words at the same time
 Plug 'kshenoy/vim-signature' " shows marks
 Plug 'mtdl9/vim-log-highlighting' " syntax for log files
-Plug 'rodjek/vim-puppet' " puppet syntax TODO nuke this or replace with treesitter when it becomes available
+Plug 'rodjek/vim-puppet' " puppet syntax TODO nuke this or replace with treesitter when it becames available
 Plug 'junegunn/goyo.vim' " goyo
+Plug 'flazz/vim-colorschemes'
 
 " text objects
 Plug 'wellle/targets.vim' " arguments objects TODO find a better one, maybe there is a treesitter one now?
@@ -224,8 +230,11 @@ nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 nnoremap <silent> <space>c  :Telescope coc commands theme=dropdown<cr>
 nnoremap <silent> <space>a  :Telescope coc code_actions theme=dropdown<cr>
+
 " nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-nnoremap <silent> <space>o  :Telescope coc document_symbols theme=dropdown width=160 height=30<cr>
+" Fri  4 Feb 2022 17:58:35 GMT Moved to Ariel
+" nnoremap <silent> <space>o  :Telescope coc document_symbols theme=dropdown width=160 height=30<cr>
+
 " Search workspace symbols
 " nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
@@ -361,6 +370,39 @@ nnoremap <leader>rb <cmd>lua require('telescope.builtin').buffers()<cr>
 " nnoremap <leader>rh <cmd>lua require('telescope.builtin').oldfiles()<cr>
 
 " }}}
+" {{{ Ariel
+
+" nnoremap <silent> <space>o  :Telescope coc document_symbols theme=dropdown width=160 height=30<cr>
+lua << EOF
+require("aerial").setup({
+  on_attach = function(bufnr)
+    -- Toggle the aerial window with <leader>o
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>o', '<cmd>AerialToggle!<CR>', {})
+    -- Jump forwards/backwards with '{' and '}'
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '{', '<cmd>AerialPrev<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '}', '<cmd>AerialNext<CR>', {})
+    -- Jump up the tree with '[[' or ']]'
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '[[', '<cmd>AerialPrevUp<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', ']]', '<cmd>AerialNextUp<CR>', {})
+  end
+})
+
+-- Call the setup function to change the default behavior
+require("aerial").setup({
+  -- Priority list of preferred backends for aerial.
+  -- This can be a filetype map (see :help aerial-filetype-map)
+  backends = { "lsp", "treesitter", "markdown" },
+
+  -- Enum: prefer_right, prefer_left, right, left, float
+  -- Determines the default direction to open the aerial window. The 'prefer'
+  -- options will open the window in the other direction *if* there is a
+  -- different buffer in the way of the preferred direction
+  default_direction = "prefer_left",
+  filter_kind = false,
+})
+EOF
+
+" }}}
 " {{{ harpoon
 
 nnoremap <leader>rm <cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>
@@ -456,32 +498,14 @@ command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 nmap <leader>Rg :RG!<CR>
 vmap <leader>Rg y:RG! <C-r>0<CR>
 
+lua << EOF
+    local actions = require "fzf-lua.actions"
+    require'fzf-lua'.setup {
+    }
+EOF
+command! -nargs=0 Experiment :FzfLua live_grep
 
 
-" " https://github.com/junegunn/fzf.vim/issues/184
-" command! -nargs=* -bang RMarks call fzf#vim#marks({'options': ['--preview', 'cat -n {-1}']})
-" " command! -nargs=* -bang RMarks call fzf#vim#marks({'options': ['--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]']})
-" nmap <leader>rm :RMarks<CR>
-
-" function! s:fzf_preview_p(bang, ...) abort
-"     let preview_args = get(g:, 'fzf_preview_window', ['up:50%', 'ctrl-/'])
-"     if empty(preview_args)
-"         return { 'options': ['--preview-window', 'hidden'] }
-"     endif
-
-"     " For backward-compatiblity
-"     if type(preview_args) == type('')
-"         let preview_args = [preview_args]
-"     endif
-"     return call('fzf#vim#with_preview', extend(copy(a:000), preview_args))
-" endfunction
-
-"   command! -bar -bang MP
-"         \ call fzf#vim#marks(
-"         \     s:fzf_preview_p(<bang>0, {'placeholder': '$([ -r $(echo {4} | sed "s#^~#$HOME#") ] && echo {4} || echo ' . fzf#shellescape(expand('%')) . '):{2}',
-"         \               'options': '--preview-window +{2}-/2'}),
-"         \     <bang>0)
-" nmap <leader>rm :MP<CR>
 
 " }}}
 " {{{ vim-fugitive rhubarb
@@ -551,7 +575,7 @@ command! -nargs=0 Flush :NERDTreeRefreshRoot
 " {{{ Fold
 command! -nargs=0 FoldCloseAll :norm zM
 command! -nargs=0 FoldOpenAll :norm zR
-command! -nargs=0 FoldCloseAllOther :norm zMzA
+command! -nargs=0 FoldCloseAllOther :norm zMa<ESC>
 " }}}
 
 
