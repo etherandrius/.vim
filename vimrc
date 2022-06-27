@@ -54,7 +54,7 @@ function! StatusJavaPath()
         let path = substitute(path, "/src/test/", "/T/", "")
     endif
     if path =~ '/src/main/'
-        let path = substitute(path, "/src/main/", "/M/", "")
+        let path = substitute(path, "/src/main/", "/S/", "")
     endif
     return path
 endfunction
@@ -94,11 +94,12 @@ Plug 'fannheyward/telescope-coc.nvim' " using telescope with coc
 Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
 Plug 'tpope/vim-fugitive' " essential
 Plug 'tpope/vim-speeddating' " better (de/in)crementing of date strings: (play Thu, 11 Apr 2002 00:59:58 +0000)
+Plug 'tpope/vim-abolish' " CoeRce to camelCase/snake_case/MixedCase crc crs crm
 Plug 'djoshea/vim-autoread' " auto-reads changes to files TODO change this to inbuild nvim inode reader stuff
 Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
 Plug 'scrooloose/nerdtree' " TODO replace this one day
-Plug 'cohama/lexima.vim' " autclose paren
 Plug 'windwp/nvim-spectre' " :SearchAndReplace
+Plug 'romainl/vim-qf' " quickfix options
 
 
 " navigation
@@ -106,7 +107,7 @@ Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'ibhagwan/fzf-lua', { 'branch' : 'main' }
-Plug 'kyazdani42/nvim-web-devicons' " optional for icon support (fzf-lua)
+" Plug 'kyazdani42/nvim-web-devicons' " optional for icon support (fzf-lua)
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'ThePrimeagen/harpoon' " Global marks but better, project Specific
@@ -317,6 +318,43 @@ let NERDTreeShowHidden=1
 
 lua << EOF
 local actions = require('telescope.actions')
+local utils = require('telescope.utils')
+local entry_display = require("telescope.pickers.entry_display")
+
+custom_path_display = function(opts, path)
+    local name = utils.path_tail(path)
+    local path = path
+    local subtype = ""
+    if path:find('/java/com/palantir/') then
+        path = path:gsub("java/com/palantir/", "")
+    end
+    if path:find('/generated/') then
+        subtype = "gen "
+        path = path:gsub("/generated/", "/G/")
+    end
+    if path:find('/src/test/') then
+        subtype = "test"
+        path = path:gsub("/src/test/", "/T/")
+    end
+    if path:find('/src/main/') then
+        subtype = "src "
+        path = path:gsub("/src/main/", "/S/")
+    end
+    local displayer = entry_display.create({
+        separator = ' ▏',
+        items = {
+            { width = 55 },
+            { width = 5 },
+            { remaining = true },
+        },
+    })
+    return displayer({
+        name,
+        subtype,
+        path,
+    })
+end
+
 require('telescope').setup{
   defaults = {
       file_previewer = require('telescope.previewers').vim_buffer_cat.new,
@@ -327,24 +365,16 @@ require('telescope').setup{
 
   pickers = {
       git_files = {
-          path_display = {
-              'shorten',
-          }
+          path_display = custom_path_display
       },
       find_files = {
-          path_display = {
-              'shorten'
-          }
+          path_display = custom_path_display
       },
       oldfiles = {
-          path_display = {
-              'shorten'
-          }
+          path_display = custom_path_display
       },
       live_grep = {
-          path_display = {
-              'shorten'
-          }
+          path_display = custom_path_display
       },
   },
 
@@ -379,11 +409,11 @@ require("aerial").setup({
     -- Toggle the aerial window with <leader>o
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>o', '<cmd>AerialToggle!<CR>', {})
     -- Jump forwards/backwards with '{' and '}'
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '{', '<cmd>AerialPrev<CR>', {})
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '}', '<cmd>AerialNext<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '[[', '<cmd>AerialPrev<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', ']]', '<cmd>AerialNext<CR>', {})
     -- Jump up the tree with '[[' or ']]'
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '[[', '<cmd>AerialPrevUp<CR>', {})
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', ']]', '<cmd>AerialNextUp<CR>', {})
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[[', '<cmd>AerialPrevUp<CR>', {})
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', ']]', '<cmd>AerialNextUp<CR>', {})
   end
 })
 
@@ -405,9 +435,14 @@ EOF
 " }}}
 " {{{ harpoon
 
-nnoremap <leader>rm <cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>
-command! -nargs=0 HarpoonAddFile :lua require("harpoon.mark").add_file()
+lua <<EOF
+require("telescope").load_extension('harpoon')
+EOF
 
+" nnoremap <leader>rm :Telescope harpoon marks theme=dropdown width=160<cr>
+nnoremap <leader>rm :lua require("harpoon.ui").toggle_quick_menu()<cr>
+command! -nargs=0 HarpoonAddFile :lua require("harpoon.mark").add_file()
+command! -nargs=0 HarpoonList :lua require("harpoon.ui").toggle_quick_menu()
 " }}}
 " {{{ treesitter
 lua <<EOF
@@ -526,6 +561,9 @@ command! -nargs=0 SearchAndReplace :lua require('spectre').open()<CR>
 " {{{ netrw
     let g:netrw_altfile = 1
 " }}}
+" {{{ brightest
+hi BrightestCustom cterm=bold,underline ctermfg=2 guifg=Blue guibg=Yellow
+let g:brightest#highlight = {"group" : "BrightestCustom"}
 
 " }}}
 
@@ -701,6 +739,7 @@ set belloff=all
 endif
 
 set foldenable
+set foldopen-=block " jumping with {  } will no longer open folds
 " this breaks telescope think about using their provided autocms stuff
 " augroup remember_folds
 "   autocmd!
@@ -777,9 +816,8 @@ set colorcolumn=81,101,121
 set shortmess+=r
 
 " when using list, keep tabs at their full width and display `arrows':
-execute 'set listchars+=tab:' . nr2char(187) . nr2char(183)
+execute 'set listchars+=tab:' . nr2char(187) . nr2char(183) . ',trail:' . nr2char(183)
 set listchars+=extends:❯,precedes:❮,nbsp:␣
-
 " (Character 187 is a right double-chevron, and 183 a mid-dot.)
 
 set noswapfile
@@ -818,7 +856,7 @@ set titlestring+=%{GetTitleString()}\ -\ [%t]\ %M\ -\ VIM
 hi User1 ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83
 
 " better colors for matched parenthesis 
-hi MatchParen gui=bold guibg=#eee8d5 guifg=#dc322f
+" hi MatchParen gui=bold guibg=#eee8d5 guifg=#dc322f
 
 " allow file custom settings. See bottom of this file for example
 set modeline
@@ -905,6 +943,7 @@ endfunction
 noremap <silent> <C-h> :call NextIndent(0, 0, 1, 1)<CR>
 noremap <silent> <C-k> :call NextIndent(0, 0, 0, 1)<CR>
 noremap <silent> <C-j> :call NextIndent(0, 1, 0, 1)<CR>
+vnoremap <silent> <C-h> <Esc>:call NextIndent(0, 0, 1, 1)<CR>m'gv''
 vnoremap <silent> <C-k> <Esc>:call NextIndent(0, 0, 0, 1)<CR>m'gv''
 vnoremap <silent> <C-j> <Esc>:call NextIndent(0, 1, 0, 1)<CR>m'gv''
 

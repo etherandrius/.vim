@@ -80,6 +80,6 @@
   },
   "npm.binPath": "npm --registry https://registry.npmjs.org",
   "java.completion.importOrder": "[]",
-  "java.format.settings.url": "/Users/agrabauskas/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml"
+  "java.jdt.ls.vmargs": "-noverify -Xmx4G -XX:+UseG1GC -XX:+UseStringDeduplication"
 }
 

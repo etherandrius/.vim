@@ -30,7 +30,6 @@ command! -nargs=0 Fmt :silent exec "!./gradlew format"
 
 
 " TEST {{{
-
 " If file is generated set it to readonly
 autocmd bufenter *.java if (expand('%:h') =~ '/generated/') | set readonly | else | set noreadonly | endif
 
