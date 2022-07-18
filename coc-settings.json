@@ -80,6 +80,7 @@
   },
   "npm.binPath": "npm --registry https://registry.npmjs.org",
   "java.completion.importOrder": "[]",
-  "java.jdt.ls.vmargs": "-noverify -Xmx4G -XX:+UseG1GC -XX:+UseStringDeduplication"
+// to debup jdt lst add arguments -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:1044 and run jdb -attach 127.0.0.1
+  "java.jdt.ls.vmargs": "-noverify -Xmx8G -XX:+UseG1GC -XX:+UseStringDeduplication"
 }
 

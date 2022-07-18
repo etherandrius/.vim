@@ -562,7 +562,7 @@ command! -nargs=0 SearchAndReplace :lua require('spectre').open()<CR>
     let g:netrw_altfile = 1
 " }}}
 " {{{ brightest
-hi BrightestCustom cterm=bold,underline ctermfg=2 guifg=Blue guibg=Yellow
+hi BrightestCustom cterm=bold,underline ctermfg=DarkGrey guifg=Blue guibg=Yellow
 let g:brightest#highlight = {"group" : "BrightestCustom"}
 
 " }}}
