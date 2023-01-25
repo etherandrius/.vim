@@ -1,0 +1,242 @@
+
+Command to generate below
+ls -1 | xargs -I % sh -c 'cd % && git d' >> /tmp/diff.diff
+
+------------------------------------------
+
+diff --git a/autoload/goyo.vim b/autoload/goyo.vim
+index 0593f78..12712f1 100644
+--- a/autoload/goyo.vim
++++ b/autoload/goyo.vim
+@@ -122,7 +122,6 @@ function! s:tranquilize()
+ endfunction
+ 
+ function! s:hide_statusline()
+-  setlocal statusline=\ 
+ endfunction
+ 
+ function! s:hide_linenr()
+diff --git a/lua/harpoon/ui.lua b/lua/harpoon/ui.lua
+index e816c01..e0fde7e 100644
+--- a/lua/harpoon/ui.lua
++++ b/lua/harpoon/ui.lua
+@@ -28,7 +28,7 @@ end
+ local function create_window()
+     log.trace("_create_window()")
+     local config = harpoon.get_menu_config()
+-    local width = config.width or 60
++    local width = config.width or 150
+     local height = config.height or 10
+     local borderchars = config.borderchars
+         or { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
+@@ -185,7 +185,7 @@ function M.location_window(options)
+     local default_options = {
+         relative = "editor",
+         style = "minimal",
+-        width = 30,
++        width = 120,
+         height = 15,
+         row = 2,
+         col = 2,
+diff --git a/lua/telescope/_extensions/marks.lua b/lua/telescope/_extensions/marks.lua
+index bc70029..a1a0f77 100644
+--- a/lua/telescope/_extensions/marks.lua
++++ b/lua/telescope/_extensions/marks.lua
+@@ -6,6 +6,7 @@ local pickers = require("telescope.pickers")
+ local previewers = require("telescope.previewers")
+ local sorters = require("telescope.sorters")
+ local conf = require("telescope.config").values
++local utils = require('telescope.utils')
+ local harpoon = require("harpoon")
+ local harpoon_mark = require("harpoon.mark")
+ 
+@@ -24,19 +25,37 @@ local generate_new_finder = function()
+     return finders.new_table({
+         results = filter_empty_string(harpoon.get_mark_config().marks),
+         entry_maker = function(entry)
+-            local line = entry.filename .. ":" .. entry.row .. ":" .. entry.col
++        local name = utils.path_tail(entry.filename)
++        local path = entry.filename
++        if entry.filename:find('/java/com/palantir/') then
++            path = path:gsub("java/com/palantir/", "")
++        end
++        if entry.filename:find('/generated/') then
++            name = "gen  ▏" .. name
++            path = path:gsub("/generated/", "/G/")
++        end
++        if entry.filename:find('/src/test/') then
++            name = "test ▏" .. name
++            path = path:gsub("/src/test/", "/T/")
++        end
++        if entry.filename:find('/src/main/') then
++            name = "src  ▏" .. name
++            path = path:gsub("/src/main/", "/S/")
++        end
++            local rowcol = entry.row .. ":" .. entry.col
+             local displayer = entry_display.create({
+-                separator = " - ",
++                separator = ' ▏',
+                 items = {
+-                    { width = 2 },
+-                    { width = 50 },
++                    { width = 55 },
++                    { width = 7 },
+                     { remaining = true },
+                 },
+             })
+             local make_display = function(entry)
+                 return displayer({
+-                    tostring(entry.index),
+-                    line,
++                    name,
++                    rowcol,
++                    path,
+                 })
+             end
+             local line = entry.filename .. ":" .. entry.row .. ":" .. entry.col
+diff --git a/doc/tags b/doc/tags
+index 030cf22..49abb10 100644
+--- a/doc/tags
++++ b/doc/tags
+@@ -1,6 +1,10 @@
+-spectre	spectre.txt	/*spectre*
+-spectre.open	spectre.txt	/*spectre.open*
+-spectre.state	spectre.txt	/*spectre.state*
+-spectre.state.get_all_entries	spectre.txt	/*spectre.state.get_all_entries*
+-spectre.state.get_current_entry	spectre.txt	/*spectre.state.get_current_entry*
+-spectre.state.get_state	spectre.txt	/*spectre.state.get_state*
++spectre-customize	spectre.txt	/*spectre-customize*
++spectre-faq	spectre.txt	/*spectre-faq*
++spectre-installation	spectre.txt	/*spectre-installation*
++spectre-nvim-spectre	spectre.txt	/*spectre-nvim-spectre*
++spectre-regex-issue	spectre.txt	/*spectre-regex-issue*
++spectre-replace	spectre.txt	/*spectre-replace*
++spectre-table-of-contents	spectre.txt	/*spectre-table-of-contents*
++spectre-usage	spectre.txt	/*spectre-usage*
++spectre-why-spectre?	spectre.txt	/*spectre-why-spectre?*
++spectre.txt	spectre.txt	/*spectre.txt*
+diff --git a/data/plenary/filetypes/base.lua b/data/plenary/filetypes/base.lua
+index 8b76c8c..a376a8b 100644
+--- a/data/plenary/filetypes/base.lua
++++ b/data/plenary/filetypes/base.lua
+@@ -297,6 +297,7 @@ return {
+     ['wlua'] = [[lua]],
+     ['lex'] = [[lex]],
+     ['java'] = [[java]],
++    ['class'] = [[java]],
+     ['edn'] = [[clojure]],
+     ['ditamap'] = [[xml]],
+     ['3p'] = [[groff]],
+diff --git a/lua/telescope/_extensions/coc.lua b/lua/telescope/_extensions/coc.lua
+index f43ba5f..568b2db 100644
+--- a/lua/telescope/_extensions/coc.lua
++++ b/lua/telescope/_extensions/coc.lua
+@@ -289,7 +289,70 @@ local type_definitions = function(opts)
+   list_or_jump(opts)
+ end
+ 
++function string_split(str, separator, withpattern)
++    if ( separator == "" ) then return string_totable( str ) end
++    if ( withpattern == nil ) then withpattern = false end
++
++    local ret = {}
++    local current_pos = 1
++
++    for i = 1, string.len( str ) do
++        local start_pos, end_pos = string.find( str, separator, current_pos, not withpattern )
++        if ( not start_pos ) then break end
++        ret[ i ] = string.sub( str, current_pos, start_pos - 1 )
++        current_pos = end_pos + 1
++    end
++
++    ret[ #ret + 1 ] = string.sub( str, current_pos )
++
++    return ret
++end
++
++custom_path_display = function(opts, path)
++    local name = utils.path_tail(path)
++    local path = path
++    local subtype = ""
++    if path:find('/java/com/palantir/') then
++        path = path:gsub("java/com/palantir/", "")
++    end
++    if path:find('/generated/') then
++        subtype = "[G] "
++        path = path:gsub("/generated/", "/G/")
++    end
++    if path:find('/src/test/') then
++        subtype = "[T] "
++        path = path:gsub("/src/test/", "/T/")
++    end
++    if path:find('/src/main/') then
++        subtype = "[S] "
++        path = path:gsub("/src/main/", "/S/")
++    end
++    local displayer = entry_display.create({
++        separator = ' ',
++        items = {
++            { remaining = true },
++            { remaining = true },
++        },
++    })
++
++    local pathParts = string_split(path, "/")
++    local revPath = pathParts[1]
++
++    for i=2,#pathParts do 
++        revPath = pathParts[i] .. " ⤏ " .. revPath
++    end 
++
++    return displayer({
++        subtype,
++        revPath,
++    })
++end
++
++
+ local references = function(opts)
++  if opts.path_display == nil then
++    opts.path_display = custom_path_display
++  end
+   if config.theme then
+     opts = vim.tbl_deep_extend("force", opts or {}, config.theme)
+   end
+@@ -312,7 +375,6 @@ local references = function(opts)
+     separator = '▏',
+     items = {
+       { width = 6 },
+-      { width = 40 },
+       { remaining = true },
+     },
+   })
+@@ -321,10 +383,10 @@ local references = function(opts)
+     local line_info = { table.concat({ entry.lnum, entry.col }, ':'), 'TelescopeResultsLineNr' }
+     local filename = utils.transform_path(opts, entry.filename)
+ 
++    print(opts)
+     return displayer({
+       line_info,
+       filename,
+-      entry.text:gsub('.* | ', ''),
+     })
+   end
+ 
+diff --git a/lua/telescope/themes.lua b/lua/telescope/themes.lua
+index ef71f89..606ed88 100644
+--- a/lua/telescope/themes.lua
++++ b/lua/telescope/themes.lua
+@@ -36,11 +36,11 @@ function themes.get_dropdown(opts)
+       preview_cutoff = 1, -- Preview should always show (unless previewer = false)
+ 
+       width = function(_, max_columns, _)
+-        return math.min(max_columns, 80)
++        return math.min(max_columns, opts.width or 80)
+       end,
+ 
+       height = function(_, _, max_lines)
+-        return math.min(max_lines, 15)
++        return math.min(max_lines, opts.height or 15)
+       end,
+     },
+ 

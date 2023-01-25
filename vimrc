@@ -125,10 +125,9 @@ Plug 'kshenoy/vim-signature' " shows marks
 Plug 'mtdl9/vim-log-highlighting' " syntax for log files
 Plug 'rodjek/vim-puppet' " puppet syntax TODO nuke this or replace with treesitter when it becames available
 Plug 'junegunn/goyo.vim' " goyo
-Plug 'flazz/vim-colorschemes'
 
 " text objects
-Plug 'wellle/targets.vim' " arguments objects TODO find a better one, maybe there is a treesitter one now?
+Plug 'wellle/targets.vim' " 
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'tpope/vim-commentary' " essential
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
@@ -377,7 +376,6 @@ require('telescope').setup{
           path_display = custom_path_display
       },
   },
-
 }
 
 require('telescope').load_extension('coc')
@@ -552,6 +550,7 @@ let g:goyo_height = "100%"
 let g:goyo_width = "55%"
 " }}}
 " {{{ targets
+" I don't know what the below mappings mean but they make argument targets more comfortable
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
 let g:targets_aiAI = 'aIAi'
 " }}}
@@ -565,6 +564,7 @@ command! -nargs=0 SearchAndReplace :lua require('spectre').open()<CR>
 hi BrightestCustom cterm=bold,underline ctermfg=DarkGrey guifg=Blue guibg=Yellow
 let g:brightest#highlight = {"group" : "BrightestCustom"}
 
+" }}}
 " }}}
 
 " Source {{{
@@ -895,9 +895,7 @@ vnoremap <silent> <space>p "0p
 " false: Go to previous line
 " lowerlevel (bool): true: Go to line with lower indentation level
 " false: Go to line with the same indentation level
-" skipblanks (bool): true: Skip blank lines
-" false: Don't skip blank lines
-function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
+function! NextIndent(exclusive, fwd, lowerlevel)
   let line = line('.')
   let column = col('.')
   let ogLine = line('.')
@@ -909,7 +907,7 @@ function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
   if (line > 0 && line <= lastline)
     let line = line + stepvalue
     if ( ! a:lowerlevel && indent(line) == indent || a:lowerlevel && indent(line) < indent)
-        if (strlen(getline(line)) > 0)
+        if (strlen(getline(line)) >= 0)
           if (a:exclusive)
             let line = line - stepvalue
           endif
@@ -940,12 +938,12 @@ function! NextIndent(exclusive, fwd, lowerlevel, skipblanks)
 endfunction
 
 " Moving back and forth between lines of same or lower indentation.
-noremap <silent> <C-h> :call NextIndent(0, 0, 1, 1)<CR>
-noremap <silent> <C-k> :call NextIndent(0, 0, 0, 1)<CR>
-noremap <silent> <C-j> :call NextIndent(0, 1, 0, 1)<CR>
-vnoremap <silent> <C-h> <Esc>:call NextIndent(0, 0, 1, 1)<CR>m'gv''
-vnoremap <silent> <C-k> <Esc>:call NextIndent(0, 0, 0, 1)<CR>m'gv''
-vnoremap <silent> <C-j> <Esc>:call NextIndent(0, 1, 0, 1)<CR>m'gv''
+noremap <silent> <C-h> :call NextIndent(0, 0, 1)<CR>
+noremap <silent> <C-k> :call NextIndent(0, 0, 0)<CR>
+noremap <silent> <C-j> :call NextIndent(0, 1, 0)<CR>
+vnoremap <silent> <C-h> <Esc>:call NextIndent(0, 0, 1)<CR>m'gv''
+vnoremap <silent> <C-k> <Esc>:call NextIndent(0, 0, 0)<CR>m'gv''
+vnoremap <silent> <C-j> <Esc>:call NextIndent(0, 1, 0)<CR>m'gv''
 
 " }}} 
 " vim: set foldmethod=marker: set foldlevel=0
