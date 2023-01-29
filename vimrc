@@ -95,6 +95,7 @@ Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
 Plug 'tpope/vim-fugitive' " essential
 Plug 'tpope/vim-speeddating' " better (de/in)crementing of date strings: (play Thu, 11 Apr 2002 00:59:58 +0000)
 Plug 'tpope/vim-abolish' " CoeRce to camelCase/snake_case/MixedCase crc crs crm
+Plug 'tpope/vim-repeat' " repeate smth idk needs testing
 Plug 'djoshea/vim-autoread' " auto-reads changes to files TODO change this to inbuild nvim inode reader stuff
 Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
 Plug 'scrooloose/nerdtree' " TODO replace this one day
@@ -111,11 +112,12 @@ Plug 'ibhagwan/fzf-lua', { 'branch' : 'main' }
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'ThePrimeagen/harpoon' " Global marks but better, project Specific
-Plug 'stevearc/aerial.nvim' " function outline
 Plug 'ggandor/lightspeed.nvim', { 'branch' : 'main' } " type where you look
 
 " nvim 0.5
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-treesitter/playground' " Adds some fun functions to treesitter, mainly TSHighlightCapturesUnderCursor
+
 Plug 'nvim-lua/plenary.nvim'
 
 " visual
@@ -298,6 +300,7 @@ else
 endif
 command! -nargs=0 Noh :noh | :SearchReset
 " }}}
+
 " {{{ NERDtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 nnoremap \tt :NERDTreeToggle<cr> " tree toggle 
@@ -396,39 +399,6 @@ nnoremap <leader>rb <cmd>lua require('telescope.builtin').buffers()<cr>
 
 " nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep({vimgrep_arguments = { 'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-u' }})<cr>
 " nnoremap <leader>rh <cmd>lua require('telescope.builtin').oldfiles()<cr>
-
-" }}}
-" {{{ Ariel
-
-" nnoremap <silent> <space>o  :Telescope coc document_symbols theme=dropdown width=160 height=30<cr>
-lua << EOF
-require("aerial").setup({
-  on_attach = function(bufnr)
-    -- Toggle the aerial window with <leader>o
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>o', '<cmd>AerialToggle!<CR>', {})
-    -- Jump forwards/backwards with '{' and '}'
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '[[', '<cmd>AerialPrev<CR>', {})
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', ']]', '<cmd>AerialNext<CR>', {})
-    -- Jump up the tree with '[[' or ']]'
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[[', '<cmd>AerialPrevUp<CR>', {})
-    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', ']]', '<cmd>AerialNextUp<CR>', {})
-  end
-})
-
--- Call the setup function to change the default behavior
-require("aerial").setup({
-  -- Priority list of preferred backends for aerial.
-  -- This can be a filetype map (see :help aerial-filetype-map)
-  backends = { "lsp", "treesitter", "markdown" },
-
-  -- Enum: prefer_right, prefer_left, right, left, float
-  -- Determines the default direction to open the aerial window. The 'prefer'
-  -- options will open the window in the other direction *if* there is a
-  -- different buffer in the way of the preferred direction
-  default_direction = "prefer_left",
-  filter_kind = false,
-})
-EOF
 
 " }}}
 " {{{ harpoon
@@ -862,6 +832,9 @@ hi User1 ctermfg=230 ctermbg=241 guifg=#fdf6e3 guibg=#657b83
 set modeline
 " }}} 
 " Test {{{
+
+" Below shows how to copy all highlight groups into a buffer 1
+" ':redir @1 | :hi | redir END'
 
 command! -nargs=0 Log :execute "normal! yyP%%i<CR><CR><ESC>V!jq<CR>%o<ESC>jV!slslog<CR>"
 

@@ -32,13 +32,6 @@ command! -nargs=0 Fmt :silent exec "!./gradlew format"
 " TEST {{{
 " If file is generated set it to readonly
 autocmd bufenter *.java if (expand('%:h') =~ '/generated/') | set readonly | else | set noreadonly | endif
-
-" colours
-hi Include ctermfg=2  guifg=#859900
-hi StorageClass ctermfg=2 guifg=#859900
-hi Structure ctermfg=2 guifg=#859900
-hi Delimiter ctermfg=10 guifg=#586e75
-hi Typedef ctermfg=9 guifg=#cb4b16
 " }}}
 
 " vim: set foldmethod=marker: set foldlevel=0
