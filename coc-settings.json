@@ -41,6 +41,7 @@
       "filetypes": ["puppet"],
       "rootPatterns": [".git/", "metadata.json"]
     },
+  }, 
   "codeLens.enable": true,
   "suggest.noselect": true,
   "coc.preferences.useQuickfixForLocations": true,

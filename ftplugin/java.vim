@@ -16,11 +16,6 @@ hi Folded ctermfg=grey
 hi Folded ctermbg=white
 set fillchars=fold:\ 
 
-" Highlight functions
-let g:limelight_mode = 'movement'
-let g:limelight_bop = 'j[m0%'
-let g:limelight_eop = 'k]M'
-
 "
 set shiftwidth=4
 set tabstop=4
