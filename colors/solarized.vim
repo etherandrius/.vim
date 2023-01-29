@@ -431,7 +431,7 @@ else
     let s:i           = ",italic"
 endif
 "}}}
-" Highlighting primitives"{{{
+" Highlighting primitives " {{{
 " ---------------------------------------------------------------------
 
 exe "let s:bg_none      = ' ".s:vmode."bg=".s:none   ."'"
@@ -480,7 +480,7 @@ exe "let s:fmt_undb     = ' ".s:vmode."=NONE".s:u.s:b.  " term=NONE".s:u.s:b."'"
 exe "let s:fmt_undi     = ' ".s:vmode."=NONE".s:u.      " term=NONE".s:u."'"
 exe "let s:fmt_uopt     = ' ".s:vmode."=NONE".s:ou.     " term=NONE".s:ou."'"
 exe "let s:fmt_curl     = ' ".s:vmode."=NONE".s:c.      " term=NONE".s:c."'"
-exe "let s:fmt_ital     = ' ".s:vmode."=NONE".s:i.      " term=NONE".s:i."'"
+exe "let s:fmt_ital     = ' ".s:vmode."=italic".s:i.    " term=NONE".s:i."'"
 exe "let s:fmt_stnd     = ' ".s:vmode."=NONE".s:s.      " term=NONE".s:s."'"
 exe "let s:fmt_revr     = ' ".s:vmode."=NONE".s:r.      " term=NONE".s:r."'"
 exe "let s:fmt_revb     = ' ".s:vmode."=NONE".s:r.s:b.  " term=NONE".s:r.s:b."'"
@@ -529,8 +529,7 @@ else
     let s:sp_blue      = ""
     let s:sp_cyan      = ""
 endif
-
-"}}}
+" }}}
 " Basic highlighting"{{{
 " ---------------------------------------------------------------------
 " note that link syntax to avoid duplicate configuration doesn't work with the
@@ -591,19 +590,6 @@ exe "hi! Special"        .s:fmt_none   .s:fg_red    .s:bg_none
 
 exe "hi! Delimiter"      .s:fmt_none   .s:fg_base01    .s:bg_none
 
-" hakcy Treesitter colour override to fix changing background colour
-exe "hi! @field"                         .s:fg_base0   .s:bg_none  .s:fmt_none
-exe "hi! @variable"                      .s:fg_base0   .s:bg_none  .s:fmt_none
-exe "hi! @variable.builtin"              .s:fg_green   .s:bg_none  .s:fmt_none
-exe "hi! @parameter"                     .s:fg_yellow  .s:bg_none  .s:fmt_none
-exe "hi! @property"                      .s:fg_yellow  .s:bg_none  .s:fmt_none
-exe "hi! @attribute"                     .s:fg_yellow  .s:bg_none  .s:fmt_none
-exe "hi! @type.builtin"                  .s:fg_green   .s:bg_none  .s:fmt_none
-exe "hi! @type.qualifier"                .s:fg_green   .s:bg_none  .s:fmt_none
-exe "hi! @method.call"                   .s:fg_base0   .s:bg_none  .s:fmt_none
-exe "hi! @function.call"                 .s:fg_base0   .s:bg_none  .s:fmt_none
-exe "hi! @namespace"                     .s:fg_blue    .s:bg_none  .s:fmt_none
-
 exe "hi! Underlined"     .s:fmt_none   .s:fg_violet .s:bg_none
 "       *Underlined      text that stands out, HTML links
 
@@ -618,6 +604,20 @@ exe "hi! Todo"           .s:fmt_bold   .s:fg_base00 .s:bg_none
 "                        keywords TODO FIXME and XXX
 "
 "}}}
+" {{{ Treesitter extension
+exe "hi! @field"                         .s:fg_base0   .s:bg_none  .s:fmt_none
+exe "hi! @variable"                      .s:fg_base0   .s:bg_none  .s:fmt_none
+exe "hi! @variable.builtin"              .s:fg_green   .s:bg_none  .s:fmt_none
+exe "hi! @parameter"                     .s:fg_yellow  .s:bg_none  .s:fmt_none
+exe "hi! @property"                      .s:fg_yellow  .s:bg_none  .s:fmt_none
+exe "hi! @attribute"                     .s:fg_yellow  .s:bg_none  .s:fmt_none
+exe "hi! @type.builtin"                  .s:fg_green   .s:bg_none  .s:fmt_none
+exe "hi! @type.qualifier"                .s:fg_green   .s:bg_none  .s:fmt_none
+exe "hi! @method.call"                   .s:fg_base0   .s:bg_none  .s:fmt_none
+exe "hi! @function.call"                 .s:fg_base0   .s:bg_none  .s:fmt_none
+exe "hi! @namespace"                     .s:fg_blue    .s:bg_none  .s:fmt_none
+exe "hi! @keyword.return"                .s:fg_green   .s:bg_none  .s:fmt_ital
+" }}}
 " Extended highlighting "{{{
 " ---------------------------------------------------------------------
 if      (g:solarized_visibility=="high")
