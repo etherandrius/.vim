@@ -95,7 +95,6 @@ Plug 'tpope/vim-rhubarb' " for fugitive for enterprise github
 Plug 'tpope/vim-fugitive' " essential
 Plug 'tpope/vim-speeddating' " better (de/in)crementing of date strings: (play Thu, 11 Apr 2002 00:59:58 +0000)
 Plug 'tpope/vim-abolish' " CoeRce to camelCase/snake_case/MixedCase crc crs crm
-Plug 'tpope/vim-repeat' " repeate smth idk needs testing
 Plug 'djoshea/vim-autoread' " auto-reads changes to files TODO change this to inbuild nvim inode reader stuff
 Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
 Plug 'scrooloose/nerdtree' " TODO replace this one day
