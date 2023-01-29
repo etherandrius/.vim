@@ -98,7 +98,6 @@ Plug 'tpope/vim-abolish' " CoeRce to camelCase/snake_case/MixedCase crc crs crm
 Plug 'djoshea/vim-autoread' " auto-reads changes to files TODO change this to inbuild nvim inode reader stuff
 Plug 'gcmt/taboo.vim' " :TabooRename to rename tabs
 Plug 'scrooloose/nerdtree' " TODO replace this one day
-Plug 'windwp/nvim-spectre' " :SearchAndReplace
 Plug 'romainl/vim-qf' " quickfix options
 
 
@@ -116,7 +115,6 @@ Plug 'ggandor/lightspeed.nvim', { 'branch' : 'main' } " type where you look
 " nvim 0.5
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'nvim-treesitter/playground' " Adds some fun functions to treesitter, mainly TSHighlightCapturesUnderCursor
-
 Plug 'nvim-lua/plenary.nvim'
 
 " visual
@@ -410,6 +408,9 @@ EOF
 nnoremap <leader>rm :lua require("harpoon.ui").toggle_quick_menu()<cr>
 command! -nargs=0 HarpoonAddFile :lua require("harpoon.mark").add_file()
 command! -nargs=0 HarpoonList :lua require("harpoon.ui").toggle_quick_menu()
+
+hi! link HarpoonWindow Normal
+hi! link HarpoonBorder Normal
 " }}}
 " {{{ treesitter
 lua <<EOF
@@ -522,9 +523,6 @@ let g:goyo_width = "55%"
 " I don't know what the below mappings mean but they make argument targets more comfortable
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB rr ll rb al rB Al bb aa bB Aa BB AA'
 let g:targets_aiAI = 'aIAi'
-" }}}
-" {{{
-command! -nargs=0 SearchAndReplace :lua require('spectre').open()<CR>
 " }}}
 " {{{ netrw
     let g:netrw_altfile = 1
