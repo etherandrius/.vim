@@ -5,7 +5,7 @@ endif
 
 set nocompatible
 
-" let g:useCocLSP = "true"
+let g:useCocLSP = "true"
 
 syntax on
 set background=light
@@ -92,6 +92,9 @@ Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'} " Using this just for better s
 if exists("useCocLSP")
     Plug 'neoclide/coc.nvim', {'branch': 'release'} " Use release branch TODO use nvim LSP
     Plug 'fannheyward/telescope-coc.nvim' " using telescope with coc
+else
+    Plug 'mfussenegger/nvim-jdtls'
+    Plug 'neovim/nvim-lspconfig'
 endif
 
 " qol
@@ -140,7 +143,10 @@ call plug#end()
 " }}} 
 " lsp configuratio {{{
 if exists("useCocLSP")
-  source "config/coc.vim"
+  source ~/.vim/config/coc.vim
+else
+lua <<EOF
+EOF
 endif
 " }}} 
 " vim-go configuration {{{
@@ -575,6 +581,9 @@ nnoremap <leader>H <C-w>H
 " }}}
 " Set {{{
 
+" Considers - inside a word to be a part of the word. fake-word
+set iskeyword+=-
+
 if &diff 
 	set wrap
 endif
@@ -615,8 +624,6 @@ set foldopen-=block " jumping with {  } will no longer open folds
 set fdc=auto:7
 " remove annoying dots when lines are folded
 set fillchars+=fold:\ 
-
-
 
 set number 
 set relativenumber

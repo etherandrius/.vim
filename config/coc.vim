@@ -90,6 +90,7 @@ nnoremap <silent> <space>a  :Telescope coc code_actions theme=dropdown<cr>
 let g:coc_global_extensions = [
 \ 'coc-yaml',
 \ 'coc-java',
+\ 'coc-lua',
 \ 'coc-go',
 \ ]
 
